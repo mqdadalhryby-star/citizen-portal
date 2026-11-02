@@ -2,77 +2,134 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>تسجيل البيانات الشخصية</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة المواطنين - تسجيل البيانات</title>
     <style>
-        body { font-family: Tahoma, sans-serif; background-color: #f4f7f6; padding: 20px; }
-        .form-container { background: #fff; max-width: 400px; margin: 0 auto; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #333; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input[type="text"], input[type="number"] { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
-        button { width: 100%; background: #28a745; color: white; border: none; padding: 10px; border-radius: 4px; font-size: 16px; cursor: pointer; }
-        button:hover { background: #218838; }
-        .success-msg { text-align: center; color: green; font-weight: bold; margin-top: 15px; display: none; }
+        body {
+            font-family: Tahoma, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+            direction: rtl;
+            text-align: right;
+        }
+        .container {
+            max-width: 500px;
+            margin: 40px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #msg {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
-<div class="form-container">
-    <h2>استمارة تسجيل البيانات</h2>
-    <form id="dataForm">
+<div class="container">
+    <h2>استمارة تسجيل المواطنين</h2>
+    <form id="citizenForm">
         <div class="form-group">
-            <label for="fullName">الاسم الكامل (حسب البطاقة):</label>
+            <label>الاسم الكامل:</label>
             <input type="text" id="fullName" required>
         </div>
         <div class="form-group">
-            <label for="idNumber">رقم البطاقة الشخصية:</label>
+            <label>رقم الهوية:</label>
             <input type="text" id="idNumber" required>
         </div>
         <div class="form-group">
-            <label for="age">العمر:</label>
-            <input type="number" id="age" required min="18">
+            <label>العمر:</label>
+            <input type="number" id="age" required>
         </div>
         <div class="form-group">
-            <label for="wifeName">اسم الزوجة:</label>
-            <input type="text" id="wifeName" required>
+            <label>اسم الزوجة:</label>
+            <input type="text" id="spouseName">
         </div>
         <div class="form-group">
-            <label for="childrenCount">عدد الأولاد:</label>
-            <input type="number" id="childrenCount" required min="0">
+            <label>عدد الأطفال:</label>
+            <input type="number" id="childrenCount" required>
         </div>
-        <button type="submit">موافق (إرسال)</button>
+        <div class="form-group">
+            <label>تاريخ التسجيل:</label>
+            <input type="date" id="regDate" required>
+        </div>
+        <button type="submit" id="submitBtn">إرسال البيانات</button>
     </form>
-    <div id="successMsg" class="success-msg">تم حفظ البيانات بنجاح!</div>
+    <p id="msg"></p>
 </div>
 
 <script>
-    document.getElementById('dataForm').addEventListener('submit', function(e) {
-        e.preventDefault(); // منع إعادة تحميل الصفحة
+    // سنقوم لاحقاً بربط رابط الـ Web App الخاص بجوجل شيت هنا
+    const WEB_APP_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
 
-        // تجميع البيانات المدخلة بما فيها رقم البطاقة
-        const newData = {
+    document.getElementById('citizenForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const btn = document.getElementById('submitBtn');
+        const msg = document.getElementById('msg');
+        btn.innerText = "جاري الإرسال...";
+        btn.disabled = true;
+
+        const formData = {
             fullName: document.getElementById('fullName').value,
             idNumber: document.getElementById('idNumber').value,
             age: document.getElementById('age').value,
-            wifeName: document.getElementById('wifeName').value,
+            spouseName: document.getElementById('spouseName').value,
             childrenCount: document.getElementById('childrenCount').value,
-            date: new Date().toLocaleDateString('ar-SA')
+            regDate: document.getElementById('regDate').value
         };
 
-        // جلب البيانات السابقة من الذاكرة المحلية للمتصفح أو إنشاء مصفوفة جديدة
-        let allRecords = JSON.parse(localStorage.getItem('citizensData')) || [];
-        allRecords.push(newData);
-
-        // حفظ البيانات المحدثة
-        localStorage.setItem('citizensData', JSON.stringify(allRecords));
-
-        // إظهار رسالة النجاح وتفريغ الحقول
-        document.getElementById('successMsg').style.display = 'block';
-        document.getElementById('dataForm').reset();
+        // مؤقتاً للتأكد، سنحفظها أيضاً محلياً لحين ربط الرابط السحابي نهائياً
+        let dataList = JSON.parse(localStorage.getItem('citizens')) || [];
+        dataList.push(formData);
+        localStorage.setItem('citizens', JSON.stringify(dataList));
 
         setTimeout(() => {
-            document.getElementById('successMsg').style.display = 'none';
-        }, 4000);
+            msg.style.color = "green";
+            msg.innerText = "تم إرسال البيانات بنجاح!";
+            document.getElementById('citizenForm').reset();
+            btn.innerText = "إرسال البيانات";
+            btn.disabled = false;
+        }, 1000);
     });
 </script>
 
