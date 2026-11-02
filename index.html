@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>تسجيل البيانات الشخصية</title>
+    <style>
+        body { font-family: Tahoma, sans-serif; background-color: #f4f7f6; padding: 20px; }
+        .form-container { background: #fff; max-width: 400px; margin: 0 auto; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #333; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"], input[type="number"] { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { width: 100%; background: #28a745; color: white; border: none; padding: 10px; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background: #218838; }
+        .success-msg { text-align: center; color: green; font-weight: bold; margin-top: 15px; display: none; }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>استمارة تسجيل البيانات</h2>
+    <form id="dataForm">
+        <div class="form-group">
+            <label for="fullName">الاسم الكامل (حسب البطاقة):</label>
+            <input type="text" id="fullName" required>
+        </div>
+        <div class="form-group">
+            <label for="idNumber">رقم البطاقة الشخصية:</label>
+            <input type="text" id="idNumber" required>
+        </div>
+        <div class="form-group">
+            <label for="age">العمر:</label>
+            <input type="number" id="age" required min="18">
+        </div>
+        <div class="form-group">
+            <label for="wifeName">اسم الزوجة:</label>
+            <input type="text" id="wifeName" required>
+        </div>
+        <div class="form-group">
+            <label for="childrenCount">عدد الأولاد:</label>
+            <input type="number" id="childrenCount" required min="0">
+        </div>
+        <button type="submit">موافق (إرسال)</button>
+    </form>
+    <div id="successMsg" class="success-msg">تم حفظ البيانات بنجاح!</div>
+</div>
+
+<script>
+    document.getElementById('dataForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // منع إعادة تحميل الصفحة
+
+        // تجميع البيانات المدخلة بما فيها رقم البطاقة
+        const newData = {
+            fullName: document.getElementById('fullName').value,
+            idNumber: document.getElementById('idNumber').value,
+            age: document.getElementById('age').value,
+            wifeName: document.getElementById('wifeName').value,
+            childrenCount: document.getElementById('childrenCount').value,
+            date: new Date().toLocaleDateString('ar-SA')
+        };
+
+        // جلب البيانات السابقة من الذاكرة المحلية للمتصفح أو إنشاء مصفوفة جديدة
+        let allRecords = JSON.parse(localStorage.getItem('citizensData')) || [];
+        allRecords.push(newData);
+
+        // حفظ البيانات المحدثة
+        localStorage.setItem('citizensData', JSON.stringify(allRecords));
+
+        // إظهار رسالة النجاح وتفريغ الحقول
+        document.getElementById('successMsg').style.display = 'block';
+        document.getElementById('dataForm').reset();
+
+        setTimeout(() => {
+            document.getElementById('successMsg').style.display = 'none';
+        }, 4000);
+    });
+</script>
+
+</body>
+</html>
