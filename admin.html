@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم المشرف - كشف بيانات الأسر</title>
+    <title>لوحة تحكم المشرف - مراجعة بيانات الأسر</title>
     <style>
         body {
             font-family: Tahoma, sans-serif;
@@ -21,23 +21,24 @@
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             overflow-x: auto;
+            margin-bottom: 30px;
         }
         h2 {
-            text-align: center;
             color: #333;
-            margin-bottom: 20px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
         }
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
-            min-width: 1200px;
+            min-width: 1300px;
         }
         th, td {
             border: 1px solid #ddd;
             padding: 10px;
             text-align: center;
-            font-size: 14px;
+            font-size: 13px;
         }
         th {
             background-color: #007bff;
@@ -46,33 +47,35 @@
         tr:nth-child(even) {
             background-color: #f9f9f9;
         }
-        .actions {
-            margin-bottom: 15px;
-            text-align: left;
+        .btn-approve {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-bottom: 5px;
         }
-        button {
+        .btn-approve:hover { background-color: #218838; }
+        .btn-reject {
             background-color: #dc3545;
             color: white;
             border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
+            padding: 6px 12px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 12px;
         }
-        button:hover {
-            background-color: #c82333;
-        }
+        .btn-reject:hover { background-color: #c82333; }
+        .badge-pending { color: #856404; background-color: #fff3cd; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+        .badge-approved { color: #155724; background-color: #d4edda; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>كشف بيانات الأسر المسجلة (لوحة التحكم)</h2>
-    
-    <div class="actions">
-        <button onclick="clearData()">حذف جميع البيانات</button>
-    </div>
-
+    <h2>1. الطلبات الواردة (تحت المراجعة والتدقيق)</h2>
     <table>
         <thead>
             <tr>
@@ -81,64 +84,134 @@
                 <th>نوع الهوية ورقمها</th>
                 <th>الحالة الاجتماعية</th>
                 <th>المهنة</th>
-                <th>عدد الأفراد (ذكور / إناث)</th>
+                <th>الأفراد (ذكور/إناث)</th>
                 <th>رقم الهاتف</th>
-                <th>محل الإقامة (المحافظة / العزلة / القرية)</th>
-                <th>حالة صحية خاصة</th>
+                <th>محل الإقامة</th>
+                <th>الحالة الصحية / المرض</th>
                 <th>الاحتياجات</th>
-                <th>متضررة من الحرب</th>
-                <th>نوع الضرر</th>
+                <th>الضرر من الحرب</th>
                 <th>الوضع المادي</th>
+                <th>إجراءات المشرف</th>
             </tr>
         </thead>
-        <tbody id="dataTable">
-            <!-- سيتم تعبئة البيانات هنا تلقائياً -->
+        <tbody id="pendingTable">
+            <!-- الطلبات المعلقة -->
+        </tbody>
+    </table>
+</div>
+
+<div class="container" style="background-color: #fdfefe; border: 2px solid #28a745;">
+    <h2 style="border-color: #28a745; color: #155724;">2. الكشف النهائي (الأسر المعتمدة والمقبولة)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>اسم رب الأسرة</th>
+                <th>اسم الزوجة</th>
+                <th>نوع الهوية ورقمها</th>
+                <th>الحالة الاجتماعية</th>
+                <th>المهنة</th>
+                <th>الأفراد (ذكور/إناث)</th>
+                <th>رقم الهاتف</th>
+                <th>محل الإقامة</th>
+                <th>الحالة الصحية / المرض</th>
+                <th>الاحتياجات</th>
+                <th>الضرر من الحرب</th>
+                <th>الوضع المادي</th>
+                <th>الحالة</th>
+            </tr>
+        </thead>
+        <tbody id="approvedTable">
+            <!-- الأسر المقبولة نهائياً -->
         </tbody>
     </table>
 </div>
 
 <script>
-    function loadData() {
-        const tableBody = document.getElementById('dataTable');
-        tableBody.innerHTML = '';
+    function loadAdminData() {
+        const pendingBody = document.getElementById('pendingTable');
+        const approvedBody = document.getElementById('approvedTable');
+        
+        pendingBody.innerHTML = '';
+        approvedBody.innerHTML = '';
 
-        // جلب البيانات المخزنة محلياً (أو ربطها لاحقاً بجدول جوجل شيت)
-        let dataList = JSON.parse(localStorage.getItem('citizens')) || [];
+        let pendingList = JSON.parse(localStorage.getItem('pendingCitizens')) || [];
+        let approvedList = JSON.parse(localStorage.getItem('approvedCitizens')) || [];
 
-        if (dataList.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="13" style="padding: 20px; color: #777;">لا توجد بيانات مسجلة حتى الآن.</td></tr>`;
-            return;
+        // تعبئة جدول الطلبات المعلقة
+        if (pendingList.length === 0) {
+            pendingBody.innerHTML = `<tr><td colspan="13" style="padding: 15px; color: #777;">لا توجد طلبات جديدة بانتظار المراجعة.</td></tr>`;
+        } else {
+            pendingList.forEach((item, index) => {
+                pendingBody.innerHTML += `<tr>
+                    <td>${item.headName || '-'}</td>
+                    <td>${item.spouseName || '-'}</td>
+                    <td>${item.idType}: ${item.idNumber || '-'}</td>
+                    <td>${item.socialStatus || '-'}</td>
+                    <td>${item.occupation || '-'}</td>
+                    <td>ذكور: ${item.malesCount || 0} <br> إناث: ${item.femalesCount || 0}</td>
+                    <td>${item.phone || '-'}</td>
+                    <td>${item.governorate} / ${item.district} / ${item.village}</td>
+                    <td>${item.healthStatus || '-'}</td>
+                    <td>${item.needs || '-'}</td>
+                    <td>${item.warAffected || '-'} (${item.damageType || 'لا يوجد'})</td>
+                    <td>${item.economicStatus || '-'}</td>
+                    <td>
+                        <button class="btn-approve" onclick="approveItem(${index})">موافق (اعتماد)</button><br>
+                        <button class="btn-reject" onclick="rejectItem(${index})">رفض (حذف)</button>
+                    </td>
+                </tr>`;
+            });
         }
 
-        dataList.forEach((item, index) => {
-            let row = `<tr>
-                <td>${item.headName || '-'}</td>
-                <td>${item.spouseName || '-'}</td>
-                <td>${item.idType}: ${item.idNumber || '-'}</td>
-                <td>${item.socialStatus || '-'}</td>
-                <td>${item.occupation || '-'}</td>
-                <td>ذكور: ${item.malesCount || 0} <br> إناث: ${item.femalesCount || 0}</td>
-                <td>${item.phone || '-'}</td>
-                <td>${item.governorate} / ${item.district} / ${item.village}</td>
-                <td>${item.healthStatus || '-'}</td>
-                <td>${item.needs || '-'}</td>
-                <td>${item.warAffected || '-'}</td>
-                <td>${item.damageType || 'لا يوجد'}</td>
-                <td>${item.economicStatus || '-'}</td>
-            </tr>`;
-            tableBody.innerHTML += row;
-        });
-    }
-
-    function clearData() {
-        if (confirm("هل أنت متأكد من رغبتك في حذف جميع البيانات المسجلة؟")) {
-            localStorage.removeItem('citizens');
-            loadData();
+        // تعبئة جدول الأسر المعتمدة نهائياً
+        if (approvedList.length === 0) {
+            approvedBody.innerHTML = `<tr><td colspan="13" style="padding: 15px; color: #777;">لم يتم اعتماد أي أسرة في الكشف النهائي حتى الآن.</td></tr>`;
+        } else {
+            approvedList.forEach((item) => {
+                approvedBody.innerHTML += `<tr>
+                    <td>${item.headName || '-'}</td>
+                    <td>${item.spouseName || '-'}</td>
+                    <td>${item.idType}: ${item.idNumber || '-'}</td>
+                    <td>${item.socialStatus || '-'}</td>
+                    <td>${item.occupation || '-'}</td>
+                    <td>ذكور: ${item.malesCount || 0} <br> إناث: ${item.femalesCount || 0}</td>
+                    <td>${item.phone || '-'}</td>
+                    <td>${item.governorate} / ${item.district} / ${item.village}</td>
+                    <td>${item.healthStatus || '-'}</td>
+                    <td>${item.needs || '-'}</td>
+                    <td>${item.warAffected || '-'} (${item.damageType || 'لا يوجد'})</td>
+                    <td>${item.economicStatus || '-'}</td>
+                    <td><span class="badge-approved">معتمد</span></td>
+                </tr>`;
+            });
         }
     }
 
-    // تحميل البيانات فور فتح الصفحة
-    window.onload = loadData;
+    // زر الموافقة: ينقل الطلب من المعلق إلى المعتمد نهائياً
+    function approveItem(index) {
+        let pendingList = JSON.parse(localStorage.getItem('pendingCitizens')) || [];
+        let approvedList = JSON.parse(localStorage.getItem('approvedCitizens')) || [];
+
+        let itemToMove = pendingList.splice(index, 1)[0]; // سحبه من المعلق
+        approvedList.push(itemToMove);                    // إضافته للمعتمد
+
+        localStorage.setItem('pendingCitizens', JSON.stringify(pendingList));
+        localStorage.setItem('approvedCitizens', JSON.stringify(approvedList));
+
+        loadAdminData();
+    }
+
+    // زر الرفض: يحذف الطلب نهائياً
+    function rejectItem(index) {
+        if(confirm("هل أنت متأكد من رفض وحذف هذه البيانات؟")) {
+            let pendingList = JSON.parse(localStorage.getItem('pendingCitizens')) || [];
+            pendingList.splice(index, 1);
+            localStorage.setItem('pendingCitizens', JSON.stringify(pendingList));
+            loadAdminData();
+        }
+    }
+
+    window.onload = loadAdminData;
 </script>
 
 </body>
