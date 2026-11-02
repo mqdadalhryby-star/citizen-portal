@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>كشف البيانات المجمع</title>
+    <style>
+        body { font-family: Tahoma, sans-serif; background-color: #f4f7f6; padding: 20px; }
+        .container { max-width: 950px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+        th { background-color: #007bff; color: white; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .actions { margin-top: 20px; text-align: left; }
+        button { background: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #c82333; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>كشف بيانات المواطنين المسجلين</h2>
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>م</th>
+                <th>الاسم الكامل (حسب البطاقة)</th>
+                <th>رقم البطاقة</th>
+                <th>العمر</th>
+                <th>اسم الزوجة</th>
+                <th>عدد الأولاد</th>
+                <th>تاريخ التسجيل</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- سيتم تعبئة البيانات هنا تلقائياً بواسطة الكود -->
+        </tbody>
+    </table>
+    
+    <div class="actions">
+        <button onclick="clearData()">حذف كافة البيانات</button>
+    </div>
+</div>
+
+<script>
+    function loadTableData() {
+        const tbody = document.querySelector('#dataTable tbody');
+        tbody.innerHTML = '';
+        
+        let allRecords = JSON.parse(localStorage.getItem('citizensData')) || [];
+        
+        if (allRecords.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7">لا توجد بيانات مسجلة حتى الآن.</td></tr>';
+            return;
+        }
+
+        allRecords.forEach((record, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${record.fullName}</td>
+                <td>${record.idNumber || '-'}</td>
+                <td>${record.age}</td>
+                <td>${record.wifeName}</td>
+                <td>${record.childrenCount}</td>
+                <td>${record.date}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    function clearData() {
+        if (confirm('هل أنت متأكد من رغبتك في حذف جميع البيانات المسجلة؟')) {
+            localStorage.removeItem('citizensData');
+            loadTableData();
+        }
+    }
+
+    // تحميل البيانات فور فتح الصفحة
+    window.onload = loadTableData;
+</script>
+
+</body>
+</html>
