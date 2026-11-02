@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة المواطنين - تسجيل البيانات</title>
+    <title>استمارة تسجيل بيانات الأسرة</title>
     <style>
         body {
             font-family: Tahoma, sans-serif;
@@ -14,8 +14,8 @@
             text-align: right;
         }
         .container {
-            max-width: 500px;
-            margin: 40px auto;
+            max-width: 600px;
+            margin: 30px auto;
             background: #ffffff;
             padding: 30px;
             border-radius: 10px;
@@ -27,20 +27,40 @@
             margin-bottom: 25px;
         }
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
         }
         label {
             display: block;
-            margin-bottom: 5px;
-            color: #555;
+            margin-bottom: 8px;
+            color: #444;
             font-weight: bold;
         }
-        input {
+        input[type="text"], input[type="number"], select {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             box-sizing: border-box;
+        }
+        .radio-group, .checkbox-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 5px;
+        }
+        .radio-group label, .checkbox-group label {
+            font-weight: normal;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+        .sub-fields {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
         }
         button {
             width: 100%;
@@ -66,42 +86,128 @@
 <body>
 
 <div class="container">
-    <h2>استمارة تسجيل المواطنين</h2>
-    <form id="citizenForm">
+    <h2>استمارة تسجيل بيانات الأسرة</h2>
+    <form id="familyForm">
+        
+        <!-- اسم رب الأسرة -->
         <div class="form-group">
-            <label>الاسم الكامل:</label>
-            <input type="text" id="fullName" required>
+            <label>اسم رب الأسرة:</label>
+            <input type="text" id="headName" required>
         </div>
-        <div class="form-group">
-            <label>رقم الهوية:</label>
-            <input type="text" id="idNumber" required>
-        </div>
-        <div class="form-group">
-            <label>العمر:</label>
-            <input type="number" id="age" required>
-        </div>
+
+        <!-- اسم الزوجة -->
         <div class="form-group">
             <label>اسم الزوجة:</label>
             <input type="text" id="spouseName">
         </div>
+
+        <!-- نوع الهوية -->
         <div class="form-group">
-            <label>عدد الأطفال:</label>
-            <input type="number" id="childrenCount" required>
+            <label>1. نوع الهوية:</label>
+            <div class="radio-group">
+                <label><input type="radio" name="idType" value="جواز سفر" required> جواز سفر</label>
+                <label><input type="radio" name="idType" value="بطاقة شخصية"> بطاقة شخصية</label>
+            </div>
         </div>
+
+        <!-- الحالة الاجتماعية -->
         <div class="form-group">
-            <label>تاريخ التسجيل:</label>
-            <input type="date" id="regDate" required>
+            <label>2. الحالة الاجتماعية:</label>
+            <div class="radio-group">
+                <label><input type="radio" name="socialStatus" value="متزوج" required> متزوج</label>
+                <label><input type="radio" name="socialStatus" value="أرمل"> أرمل</label>
+                <label><input type="radio" name="socialStatus" value="مطلق"> مطلق</label>
+            </div>
         </div>
+
+        <!-- المهنة -->
+        <div class="form-group">
+            <label>3. المهنة:</label>
+            <input type="text" id="occupation" required>
+        </div>
+
+        <!-- عدد أفراد الأسرة -->
+        <div class="form-group">
+            <label>4. عدد أفراد الأسرة:</label>
+            <div class="sub-fields">
+                <input type="number" id="malesCount" placeholder="ذكور" min="0" required>
+                <input type="number" id="femalesCount" placeholder="إناث" min="0" required>
+            </div>
+        </div>
+
+        <!-- رقم الهاتف -->
+        <div class="form-group">
+            <label>رقم الهاتف:</label>
+            <input type="text" id="phone" required>
+        </div>
+
+        <!-- محل الإقامة -->
+        <div class="form-group">
+            <label>محل الإقامة:</label>
+            <div class="sub-fields">
+                <input type="text" id="governorate" placeholder="المحافظة" required>
+                <input type="text" id="district" placeholder="العزلة" required>
+                <input type="text" id="village" placeholder="القرية" required>
+            </div>
+        </div>
+
+        <!-- الحالة الصحية -->
+        <div class="form-group">
+            <label>5. هل توجد حالات مرضية أو صحية خاصة في الأسرة؟</label>
+            <div class="radio-group">
+                <label><input type="radio" name="healthStatus" value="نعم" required> نعم</label>
+                <label><input type="radio" name="healthStatus" value="لا"> لا</label>
+            </div>
+        </div>
+
+        <!-- احتياجات الأسرة -->
+        <div class="form-group">
+            <label>6. احتياجات الأسرة (يمكن اختيار أكثر من احتياج):</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" name="needs" value="غذاء"> غذاء</label>
+                <label><input type="checkbox" name="needs" value="مأوى"> مأوى</label>
+                <label><input type="checkbox" name="needs" value="صحة"> صحة</label>
+                <label><input type="checkbox" name="needs" value="تعليم"> تعليم</label>
+            </div>
+        </div>
+
+        <!-- هل الأسرة متضررة من الحرب -->
+        <div class="form-group">
+            <label>7. هل الأسرة متضررة من الحرب؟</label>
+            <div class="radio-group">
+                <label><input type="radio" name="warAffected" value="نعم" id="affectedYes" required> نعم</label>
+                <label><input type="radio" name="warAffected" value="لا" id="affectedNo"> لا</label>
+            </div>
+        </div>
+
+        <!-- نوع الضرر -->
+        <div class="form-group" id="damageTypeGroup">
+            <label>8. نوع الضرر (في حال كانت متضررة):</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" name="damageType" value="حصار"> حصار</label>
+                <label><input type="checkbox" name="damageType" value="قصف"> قصف</label>
+                <label><input type="checkbox" name="damageType" value="تضرر مسكن"> تضرر مسكن</label>
+            </div>
+        </div>
+
+        <!-- وضع الأسرة -->
+        <div class="form-group">
+            <label>وضع الأسرة المادي:</label>
+            <div class="radio-group">
+                <label><input type="radio" name="economicStatus" value="فقير" required> فقير</label>
+                <label><input type="radio" name="economicStatus" value="متوسط"> متوسط</label>
+            </div>
+        </div>
+
         <button type="submit" id="submitBtn">إرسال البيانات</button>
     </form>
     <p id="msg"></p>
 </div>
 
 <script>
-    // سنقوم لاحقاً بربط رابط الـ Web App الخاص بجوجل شيت هنا
     const WEB_APP_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
 
-    document.getElementById('citizenForm').addEventListener('submit', function(e) {
+    document.getElementById('familyForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
         const btn = document.getElementById('submitBtn');
@@ -109,24 +215,42 @@
         btn.innerText = "جاري الإرسال...";
         btn.disabled = true;
 
+        // جمع الخيارات المتعددة (Checkbox) لاحتياجات الأسرة
+        let selectedNeeds = [];
+        document.querySelectorAll('input[name="needs"]:checked').forEach((el) => {
+            selectedNeeds.push(el.value);
+        });
+
+        // جمع الخيارات المتعددة لأنواع الضرر
+        let selectedDamage = [];
+        document.querySelectorAll('input[name="damageType"]:checked').forEach((el) => {
+            selectedDamage.push(el.value);
+        });
+
         const formData = {
-            fullName: document.getElementById('fullName').value,
-            idNumber: document.getElementById('idNumber').value,
-            age: document.getElementById('age').value,
+            headName: document.getElementById('headName').value,
             spouseName: document.getElementById('spouseName').value,
-            childrenCount: document.getElementById('childrenCount').value,
-            regDate: document.getElementById('regDate').value
+            idType: document.querySelector('input[name="idType"]:checked')?.value || '',
+            socialStatus: document.querySelector('input[name="socialStatus"]:checked')?.value || '',
+            occupation: document.getElementById('occupation').value,
+            malesCount: document.getElementById('malesCount').value,
+            femalesCount: document.getElementById('femalesCount').value,
+            phone: document.getElementById('phone').value,
+            governorate: document.getElementById('governorate').value,
+            district: document.getElementById('district').value,
+            village: document.getElementById('village').value,
+            healthStatus: document.querySelector('input[name="healthStatus"]:checked')?.value || '',
+            needs: selectedNeeds.join(', '),
+            warAffected: document.querySelector('input[name="warAffected"]:checked')?.value || '',
+            damageType: selectedDamage.join(', '),
+            economicStatus: document.querySelector('input[name="economicStatus"]:checked')?.value || ''
         };
 
-        // مؤقتاً للتأكد، سنحفظها أيضاً محلياً لحين ربط الرابط السحابي نهائياً
-        let dataList = JSON.parse(localStorage.getItem('citizens')) || [];
-        dataList.push(formData);
-        localStorage.setItem('citizens', JSON.stringify(dataList));
-
+        // إرسال البيانات (محاكاة أو ربط مباشر لاحقاً بالسكريبت)
         setTimeout(() => {
             msg.style.color = "green";
-            msg.innerText = "تم إرسال البيانات بنجاح!";
-            document.getElementById('citizenForm').reset();
+            msg.innerText = "تم إرسال بيانات الأسرة بنجاح!";
+            document.getElementById('familyForm').reset();
             btn.innerText = "إرسال البيانات";
             btn.disabled = false;
         }, 1000);
