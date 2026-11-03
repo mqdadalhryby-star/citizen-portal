@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>استمارة تسجيل بيانات الأسرة</title>
+    <title>استمارة تسجیل الأسر - البوابة المجتمعية</title>
     <style>
         body {
             font-family: Tahoma, sans-serif;
@@ -15,264 +15,221 @@
         }
         .container {
             max-width: 600px;
-            margin: 30px auto;
+            margin: auto;
             background: #ffffff;
-            padding: 30px;
+            padding: 25px;
             border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         h2 {
+            color: #007bff;
             text-align: center;
-            color: #333;
-            margin-bottom: 25px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
         }
         .form-group {
-            margin-bottom: 20px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 15px;
+            margin-bottom: 15px;
         }
         label {
             display: block;
-            margin-bottom: 8px;
-            color: #444;
+            margin-bottom: 5px;
             font-weight: bold;
+            color: #333;
         }
-        input[type="text"], input[type="number"], select {
+        input, select, textarea {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             box-sizing: border-box;
+            font-size: 14px;
         }
-        .radio-group, .checkbox-group {
+        .row {
             display: flex;
             gap: 15px;
-            flex-wrap: wrap;
-            margin-top: 5px;
         }
-        .radio-group label, .checkbox-group label {
-            font-weight: normal;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            cursor: pointer;
+        .row .form-group {
+            flex: 1;
         }
-        .sub-fields {
-            display: flex;
-            gap: 10px;
-            margin-top: 8px;
-        }
-        #idNumberContainer {
-            margin-top: 10px;
-            display: none;
-        }
-        button {
-            width: 100%;
-            background-color: #007bff;
+        .btn-submit {
+            background-color: #28a745;
             color: white;
-            padding: 12px;
             border: none;
+            padding: 12px;
+            width: 100%;
             border-radius: 5px;
             font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
             margin-top: 10px;
         }
-        button:hover {
-            background-color: #0056b3;
-        }
-        #msg {
-            text-align: center;
-            margin-top: 15px;
-            font-weight: bold;
+        .btn-submit:hover {
+            background-color: #218838;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>استمارة تسجيل بيانات الأسرة</h2>
+    <h2>استمارة تسجيل بيانات الأسر</h2>
     <form id="familyForm">
         
-        <!-- اسم رب الأسرة -->
         <div class="form-group">
-            <label>اسم رب الأسرة:</label>
-            <input type="text" id="headName" required>
+            <label for="headName">اسم رب الأسرة الرباعي:</label>
+            <input type="text" id="headName" required placeholder="أدخل اسم رب الأسرة كاملاً">
         </div>
 
-        <!-- اسم الزوجة -->
         <div class="form-group">
-            <label>اسم الزوجة:</label>
-            <input type="text" id="spouseName">
+            <label for="spouseName">اسم الزوجة:</label>
+            <input type="text" id="spouseName" placeholder="أدخل اسم الزوجة (إن وجد)">
         </div>
 
-        <!-- نوع الهوية ورقمها -->
-        <div class="form-group">
-            <label>1. نوع الهوية:</label>
-            <div class="radio-group" id="idTypeGroup">
-                <label><input type="radio" name="idType" value="جواز سفر" required> جواز سفر</label>
-                <label><input type="radio" name="idType" value="بطاقة شخصية"> بطاقة شخصية</label>
-                <label><input type="radio" name="idType" value="بطاقة انتخابية"> بطاقة انتخابية</label>
-                <label><input type="radio" name="idType" value="رقم جلوس"> رقم جلوس</label>
+        <div class="row">
+            <div class="form-group">
+                <label for="idType">نوع الهوية:</label>
+                <select id="idType">
+                    <option value="بطاقة شخصية">بطاقة شخصية</option>
+                    <option value="عائلية">بطاقة عائلية</option>
+                    <option value="جواز سفر">جواز سفر</option>
+                </select>
             </div>
-            <!-- خانة إدخال رقم الهوية التي تظهر بعد الاختيار -->
-            <div id="idNumberContainer">
-                <label for="idNumberInput" style="margin-top: 10px; font-size: 14px; color: #666;">أدخل رقم الهوية / الوثيقة:</label>
-                <input type="text" id="idNumberInput" placeholder="اكتب الرقم هنا...">
+            <div class="form-group">
+                <label for="idNumber">رقم الهوية:</label>
+                <input type="text" id="idNumber" required placeholder="أدخل رقم الهوية">
             </div>
         </div>
 
-        <!-- الحالة الاجتماعية -->
-        <div class="form-group">
-            <label>2. الحالة الاجتماعية:</label>
-            <div class="radio-group">
-                <label><input type="radio" name="socialStatus" value="متزوج" required> متزوج</label>
-                <label><input type="radio" name="socialStatus" value="أرمل"> أرمل</label>
-                <label><input type="radio" name="socialStatus" value="مطلق"> مطلق</label>
+        <div class="row">
+            <div class="form-group">
+                <label for="socialStatus">الحالة الاجتماعية:</label>
+                <select id="socialStatus">
+                    <option value="متزوج/ة">متزوج/ة</option>
+                    <option value="أرمل/ة">أرمل/ة</option>
+                    <option value="مطلق/ة">مطلق/ة</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="occupation">المهنة:</label>
+                <input type="text" id="occupation" placeholder="المهنة الحالية">
             </div>
         </div>
 
-        <!-- المهنة -->
-        <div class="form-group">
-            <label>3. المهنة:</label>
-            <input type="text" id="occupation" required>
-        </div>
-
-        <!-- عدد أفراد الأسرة -->
-        <div class="form-group">
-            <label>4. عدد أفراد الأسرة:</label>
-            <div class="sub-fields">
-                <input type="number" id="malesCount" placeholder="ذكور" min="0" required>
-                <input type="number" id="femalesCount" placeholder="إناث" min="0" required>
+        <div class="row">
+            <div class="form-group">
+                <label for="malesCount">عدد الذكور:</label>
+                <input type="number" id="malesCount" min="0" value="0">
+            </div>
+            <div class="form-group">
+                <label for="femalesCount">عدد الإناث:</label>
+                <input type="number" id="femalesCount" min="0" value="0">
             </div>
         </div>
 
-        <!-- رقم الهاتف -->
         <div class="form-group">
-            <label>رقم الهاتف:</label>
-            <input type="text" id="phone" required>
+            <label for="phone">رقم الهاتف للتواصل:</label>
+            <input type="tel" id="phone" required placeholder="مثال: 771122334">
         </div>
 
-        <!-- محل الإقامة -->
-        <div class="form-group">
-            <label>محل الإقامة:</label>
-            <div class="sub-fields">
-                <input type="text" id="governorate" placeholder="المحافظة" required>
-                <input type="text" id="district" placeholder="العزلة" required>
-                <input type="text" id="village" placeholder="القرية" required>
+        <div class="row">
+            <div class="form-group">
+                <label for="governorate">المحافظة:</label>
+                <input type="text" id="governorate" required placeholder="المحافظة">
+            </div>
+            <div class="form-group">
+                <label for="district">المديرية / العزلة:</label>
+                <input type="text" id="district" required placeholder="المديرية أو العزلة">
             </div>
         </div>
 
-        <!-- الحالة الصحية -->
         <div class="form-group">
-            <label>5. هل توجد حالات مرضية أو صحية خاصة في الأسرة؟</label>
-            <div class="radio-group">
-                <label><input type="radio" name="healthStatus" value="نعم" required> نعم</label>
-                <label><input type="radio" name="healthStatus" value="لا"> لا</label>
+            <label for="village">القرية / الحارة:</label>
+            <input type="text" id="village" required placeholder="القرية أو الحارة">
+        </div>
+
+        <div class="form-group">
+            <label for="healthStatus">الحالة الصحية (هل يوجد أمراض مزمنة أو إعاقات؟):</label>
+            <input type="text" id="healthStatus" placeholder="اكتب التفاصيل إن وجدت، أو اتركها فارغة">
+        </div>
+
+        <div class="form-group">
+            <label for="needs">الاحتياجات الملحة للأسرة:</label>
+            <textarea id="needs" rows="2" placeholder="مثل: سلة غذائية، علاج، مساعدة نقدية..."></textarea>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label for="warAffected">هل الأسرة متضررة من الحرب؟</label>
+                <select id="warAffected">
+                    <option value="لا">لا</option>
+                    <option value="نعم">نعم</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="damageType">نوع الضرر (إن وجد):</label>
+                <input type="text" id="damageType" placeholder="تدمير منزل، نزوح، فقدان عائل...">
             </div>
         </div>
 
-        <!-- احتياجات الأسرة -->
         <div class="form-group">
-            <label>6. احتياجات الأسرة (يمكن اختيار أكثر من احتياج):</label>
-            <div class="checkbox-group">
-                <label><input type="checkbox" name="needs" value="غذاء"> غذاء</label>
-                <label><input type="checkbox" name="needs" value="مأوى"> مأوى</label>
-                <label><input type="checkbox" name="needs" value="صحة"> صحة</label>
-                <label><input type="checkbox" name="needs" value="تعليم"> تعليم</label>
-            </div>
+            <label for="economicStatus">الوضع المادي / الدخل:</label>
+            <select id="economicStatus">
+                <option value="بدون أي دخل">بدون أي دخل</option>
+                <option value="دخل محدود جداً ومتقطع">دخل محدود جداً ومتقطع</option>
+                <option value="يعتمد على المساعدات الإنسانية">يعتمد على المساعدات الإنسانية</option>
+            </select>
         </div>
 
-        <!-- هل الأسرة متضررة من الحرب -->
-        <div class="form-group">
-            <label>7. هل الأسرة متضررة من الحرب؟</label>
-            <div class="radio-group">
-                <label><input type="radio" name="warAffected" value="نعم" required> نعم</label>
-                <label><input type="radio" name="warAffected" value="لا"> لا</label>
-            </div>
-        </div>
-
-        <!-- نوع الضرر -->
-        <div class="form-group">
-            <label>8. نوع الضرر (في حال كانت متضررة):</label>
-            <div class="checkbox-group">
-                <label><input type="checkbox" name="damageType" value="حصار"> حصار</label>
-                <label><input type="checkbox" name="damageType" value="قصف"> قصف</label>
-                <label><input type="checkbox" name="damageType" value="تضرر مسكن"> تضرر مسكن</label>
-            </div>
-        </div>
-
-        <!-- وضع الأسرة -->
-        <div class="form-group">
-            <label>وضع الأسرة المادي:</label>
-            <div class="radio-group">
-                <label><input type="radio" name="economicStatus" value="فقير" required> فقير</label>
-                <label><input type="radio" name="economicStatus" value="متوسط"> متوسط</label>
-            </div>
-        </div>
-
-        <button type="submit" id="submitBtn">إرسال البيانات</button>
+        <button type="submit" class="btn-submit">إرسال البيانات عبر واتساب 📱</button>
     </form>
-    <p id="msg"></p>
 </div>
 
 <script>
-    const WEB_APP_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
-
-    // إظهار خانة إدخال رقم الهوية تلقائياً عند اختيار أي نوع هوية
-    document.querySelectorAll('input[name="idType"]').forEach((elem) => {
-        elem.addEventListener('change', function(e) {
-            document.getElementById('idNumberContainer').style.display = 'block';
-            document.getElementById('idNumberInput').required = true;
-        });
-    });
-
     document.getElementById('familyForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        
-        const btn = document.getElementById('submitBtn');
-        const msg = document.getElementById('msg');
-        btn.innerText = "جاري الإرسال...";
-        btn.disabled = true;
 
-        let selectedNeeds = [];
-        document.querySelectorAll('input[name="needs"]:checked').forEach((el) => {
-            selectedNeeds.push(el.value);
-        });
+        // جمع البيانات من الحقول
+        let headName = document.getElementById('headName').value;
+        let spouseName = document.getElementById('spouseName').value;
+        let idType = document.getElementById('idType').value;
+        let idNumber = document.getElementById('idNumber').value;
+        let socialStatus = document.getElementById('socialStatus').value;
+        let occupation = document.getElementById('occupation').value;
+        let malesCount = document.getElementById('malesCount').value;
+        let femalesCount = document.getElementById('femalesCount').value;
+        let phone = document.getElementById('phone').value;
+        let governorate = document.getElementById('governorate').value;
+        let district = document.getElementById('district').value;
+        let village = document.getElementById('village').value;
+        let healthStatus = document.getElementById('healthStatus').value;
+        let needs = document.getElementById('needs').value;
+        let warAffected = document.getElementById('warAffected').value;
+        let damageType = document.getElementById('damageType').value;
+        let economicStatus = document.getElementById('economicStatus').value;
 
-        let selectedDamage = [];
-        document.querySelectorAll('input[name="damageType"]:checked').forEach((el) => {
-            selectedDamage.push(el.value);
-        });
+        // تنسيق رسالة واتساب باحترافية
+        let message = `📋 *طلب تسجيل أسرة جديد*:\n\n` +
+                      `👤 *اسم رب الأسرة:* ${headName}\n` +
+                      `👩 *اسم الزوجة:* ${spouseName || 'غير متوفر'}\n` +
+                      `🆔 *الهوية:* ${idType} (${idNumber})\n` +
+                      `💍 *الحالة الاجتماعية:* ${socialStatus}\n` +
+                      `💼 *المهنة:* ${occupation || 'غير محدد'}\n` +
+                      `👥 *عدد الأفراد:* ذكور (${malesCount}) | إناث (${femalesCount})\n` +
+                      `📱 *رقم الهاتف:* ${phone}\n` +
+                      `📍 *العنوان:* ${governorate} - ${district} - ${village}\n` +
+                      `🩺 *الحالة الصحية:* ${healthStatus || 'لا يوجد'}\n` +
+                      `📦 *الاحتياجات:* ${needs || 'لا يوجد'}\n` +
+                      `⚠️ *متضررة من الحرب:* ${warAffected} (${damageType || 'لا يوجد'})\n` +
+                      `💰 *الوضع المادي:* ${economicStatus}`;
 
-        const formData = {
-            headName: document.getElementById('headName').value,
-            spouseName: document.getElementById('spouseName').value,
-            idType: document.querySelector('input[name="idType"]:checked')?.value || '',
-            idNumber: document.getElementById('idNumberInput').value,
-            socialStatus: document.querySelector('input[name="socialStatus"]:checked')?.value || '',
-            occupation: document.getElementById('occupation').value,
-            malesCount: document.getElementById('malesCount').value,
-            femalesCount: document.getElementById('femalesCount').value,
-            phone: document.getElementById('phone').value,
-            governorate: document.getElementById('governorate').value,
-            district: document.getElementById('district').value,
-            village: document.getElementById('village').value,
-            healthStatus: document.querySelector('input[name="healthStatus"]:checked')?.value || '',
-            needs: selectedNeeds.join(', '),
-            warAffected: document.querySelector('input[name="warAffected"]:checked')?.value || '',
-            damageType: selectedDamage.join(', '),
-            economicStatus: document.querySelector('input[name="economicStatus"]:checked')?.value || ''
-        };
+        let encodedMessage = encodeURIComponent(message);
 
-        // محاكاة الإرسال (سيتم ربطه بالرابط السحابي لاحقاً)
-        setTimeout(() => {
-            msg.style.color = "green";
-            msg.innerText = "تم إرسال بيانات الأسرة بنجاح!";
-            document.getElementById('familyForm').reset();
-            document.getElementById('idNumberContainer').style.display = 'none';
-            btn.innerText = "إرسال البيانات";
-            btn.disabled = false;
-        }, 1000);
+        // ⚠️ هام: قم بتغيير الرقم أدناه إلى رقم هاتفك الشخصي مع رمز الدولة (بدون علامة +)
+        let whatsappNumber = "967733368093"; 
+
+        // فتح رابط واتساب بالرسالة المجهزة
+        let whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+        window.open(whatsappURL, '_blank');
     });
 </script>
 
