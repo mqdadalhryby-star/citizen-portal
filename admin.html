@@ -1,797 +1,243 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#1769aa">
-  <title>لوحة إدارة البوابة المجتمعية</title>
-
-  <style>
-    *{box-sizing:border-box}
-    body{font-family:Tahoma,Arial,sans-serif;background:#f4f6f9;margin:0;padding:20px;color:#263238}
-    .container{max-width:100%;background:#fff;overflow-x:auto;padding:20px;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.07);margin:0 auto 25px}
-    h1{font-size:23px;color:#1769aa;text-align:center;margin:5px 0 22px}
-    h2{font-size:19px;color:#1769aa;margin:8px 0 15px}
-    .login-box{max-width:430px;margin:45px auto}
-    .login-box p{color:#687782;line-height:1.7;font-size:14px}
-    label{display:block;font-weight:bold;margin:12px 0 6px;font-size:14px}
-    input,textarea{width:100%;padding:11px;border:1px solid #ccd5dd;border-radius:7px;font:inherit}
-    button{border:0;border-radius:6px;padding:9px 13px;font:inherit;cursor:pointer;margin:2px}
-    button:disabled{opacity:.6;cursor:wait}
-    .primary{background:#1769aa;color:#fff}
-    .approve{background:#28a745;color:#fff}
-    .reject{background:#dc3545;color:#fff}
-    .edit{background:#ffc107;color:#222}
-    .delete{background:#dc3545;color:#fff}
-    .download{background:#1769aa;color:#fff}
-    .logout{background:#687782;color:#fff}
-    .toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
-    .table-wrap{width:100%;overflow-x:auto}
-    table{width:100%;min-width:1650px;border-collapse:collapse;font-size:13px}
-    th,td{border:1px solid #dce3e9;padding:9px;text-align:right;vertical-align:top;line-height:1.6}
-    th{background:#1769aa;color:#fff;white-space:nowrap}
-    tbody tr:nth-child(even){background:#f8fafc}
-    td.actions{white-space:nowrap}
-    .notice{padding:11px 13px;border-radius:7px;margin:12px 0;line-height:1.7;font-size:14px;display:none}
-    .error{background:#fff0f0;color:#a32323;border:1px solid #f0c3c3}
-    .info{background:#eef6ff;color:#174f7a;border:1px solid #c9e1f5}
-    .hidden{display:none!important}
-    .empty{text-align:center;color:#71808a;padding:22px}
-    @media(max-width:600px){
-      body{padding:9px}
-      .container{padding:13px}
-      .toolbar{align-items:flex-start}
-      h1{font-size:20px}
-    }
-  </style>
-</head>
-
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1769aa"><title>لوحة إدارة البوابة المجتمعية</title>
+<style>
+*{box-sizing:border-box}body{font-family:Tahoma,Arial,sans-serif;background:#f4f6f9;margin:0;padding:20px;color:#263238}
+.container{max-width:100%;background:#fff;overflow-x:auto;padding:20px;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.07);margin:0 auto 25px}
+h1{font-size:23px;color:#1769aa;text-align:center;margin:5px 0 22px}h2{font-size:19px;color:#1769aa;margin:8px 0 15px}
+.login-box{max-width:430px;margin:45px auto}.login-box p{color:#687782;line-height:1.7;font-size:14px}
+label{display:block;font-weight:bold;margin:12px 0 6px;font-size:14px}input,textarea{width:100%;padding:11px;border:1px solid #ccd5dd;border-radius:7px;font:inherit}
+button{border:0;border-radius:6px;padding:9px 13px;font:inherit;cursor:pointer;margin:2px}button:disabled{opacity:.6;cursor:wait}
+.primary{background:#1769aa;color:#fff}.approve{background:#28a745;color:#fff}.reject{background:#dc3545;color:#fff}
+.edit{background:#ffc107;color:#222}.delete{background:#dc3545;color:#fff}.download{background:#1769aa;color:#fff}.logout{background:#687782;color:#fff}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.table-wrap{width:100%;overflow-x:auto}table{width:100%;min-width:1850px;border-collapse:collapse;font-size:13px}
+th,td{border:1px solid #dce3e9;padding:9px;text-align:right;vertical-align:top;line-height:1.6}
+th{background:#1769aa;color:#fff;white-space:nowrap}tbody tr:nth-child(even){background:#f8fafc}td.actions{white-space:nowrap}
+.notice{padding:11px 13px;border-radius:7px;margin:12px 0;line-height:1.7;font-size:14px;display:none}
+.error{background:#fff0f0;color:#a32323;border:1px solid #f0c3c3}.info{background:#eef6ff;color:#174f7a;border:1px solid #c9e1f5}
+.hidden{display:none!important}.empty{text-align:center;color:#71808a;padding:22px}
+@media(max-width:600px){body{padding:9px}.container{padding:13px}.toolbar{align-items:flex-start}h1{font-size:20px}}
+</style></head>
 <body>
-
-  <section id="loginSection" class="container login-box">
-    <h1>تسجيل دخول المشرف</h1>
-
-    <p>
-      هذه الصفحة مخصصة للمشرفين المعتمدين فقط.
-      استخدم البريد الإلكتروني وكلمة المرور المسجلين في Supabase Authentication.
-    </p>
-
-    <div id="loginError" class="notice error" role="alert"></div>
-
-    <form id="loginForm">
-      <label for="email">البريد الإلكتروني</label>
-      <input id="email" type="email" autocomplete="username" required>
-
-      <label for="password">كلمة المرور</label>
-      <input id="password" type="password" autocomplete="current-password" required>
-
-      <button id="loginBtn" class="primary" type="submit" style="width:100%;margin-top:16px">
-        دخول
-      </button>
-    </form>
-  </section>
-
-  <main id="dashboard" class="hidden">
-
-    <div class="container">
-      <div class="toolbar">
-        <h1 style="margin:0">لوحة إدارة البوابة المجتمعية</h1>
-        <button id="logoutBtn" class="logout">تسجيل الخروج</button>
-      </div>
-
-      <div id="dashboardError" class="notice error" role="alert"></div>
-      <div id="dashboardInfo" class="notice info" role="status"></div>
-
-      <p>
-        تظهر هنا الطلبات المسجلة في قاعدة البيانات المشتركة.
-        اعتماد الطلب ينقله إلى الكشف النهائي، ورفضه يغيّر حالته إلى «مرفوض» مع الاحتفاظ بالسجل.
-      </p>
-    </div>
-
-    <section class="container">
-      <div class="toolbar">
-        <h2>الطلبات الواردة (تحت المراجعة والتدقيق)</h2>
-        <button id="refreshBtn" class="primary">تحديث البيانات</button>
-      </div>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>اسم رب الأسرة</th>
-              <th>اسم الزوجة/الزوج</th>
-              <th>نوع الهوية</th>
-              <th>رقم الهوية</th>
-              <th>الحالة الاجتماعية</th>
-              <th>المهنة</th>
-              <th>الذكور</th>
-              <th>الإناث</th>
-              <th>الهاتف</th>
-              <th>المستلم البديل</th>
-              <th>رقم هوية البديل</th>
-              <th>هاتف البديل</th>
-              <th>المحافظة</th>
-              <th>المديرية</th>
-              <th>القرية/الحي</th>
-              <th>الحالة الصحية</th>
-              <th>الاحتياجات</th>
-              <th>متضرر من الحرب</th>
-              <th>نوع الضرر</th>
-              <th>الوضع المادي</th>
-              <th>الإجراءات</th>
-            </tr>
-          </thead>
-
-          <tbody id="pendingBody">
-            <tr><td class="empty" colspan="21">جارٍ تحميل البيانات...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="container">
-      <div class="toolbar">
-        <h2>الكشف النهائي (الأسر المعتمدة والمقبولة)</h2>
-        <button id="downloadBtn" class="download">
-          تنزيل الكشف Excel
-        </button>
-      </div>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>اسم رب الأسرة</th>
-              <th>اسم الزوجة/الزوج</th>
-              <th>نوع الهوية</th>
-              <th>رقم الهوية</th>
-              <th>الحالة الاجتماعية</th>
-              <th>المهنة</th>
-              <th>الذكور</th>
-              <th>الإناث</th>
-              <th>الهاتف</th>
-              <th>المستلم البديل</th>
-              <th>رقم هوية البديل</th>
-              <th>هاتف البديل</th>
-              <th>المحافظة</th>
-              <th>المديرية</th>
-              <th>القرية/الحي</th>
-              <th>الحالة الصحية</th>
-              <th>الاحتياجات</th>
-              <th>متضرر من الحرب</th>
-              <th>نوع الضرر</th>
-              <th>الوضع المادي</th>
-              <th>الإجراءات</th>
-            </tr>
-          </thead>
-
-          <tbody id="approvedBody">
-            <tr><td class="empty" colspan="21">جارٍ تحميل البيانات...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <!-- ExcelJS لإنشاء ملفات Excel الحقيقية -->
-  <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
-
-  <script>
-    // استخدم المفتاح Publishable فقط في المتصفح.
-    // لا تضع service_role هنا أبداً.
-
-    const SUPABASE_URL = 'https://iwiakxpsuxzsujdsrehs.supabase.co';
-
-    const SUPABASE_PUBLISHABLE_KEY =
-      'sb_publishable_qI-wgJeZFL4FnCZzuPkSkQ_3cSoyaSu';
-
-    const supabaseClient = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_PUBLISHABLE_KEY
-    );
-
-    const loginSection = document.getElementById('loginSection');
-    const dashboard = document.getElementById('dashboard');
-    const loginForm = document.getElementById('loginForm');
-    const loginBtn = document.getElementById('loginBtn');
-    const loginError = document.getElementById('loginError');
-    const dashboardError = document.getElementById('dashboardError');
-    const dashboardInfo = document.getElementById('dashboardInfo');
-    const pendingBody = document.getElementById('pendingBody');
-    const approvedBody = document.getElementById('approvedBody');
-
-    let pendingRows = [];
-    let approvedRows = [];
-
-    // ترتيب الأعمدة في لوحة الإدارة وملف Excel.
-    const columns = [
-      ['head_name', 'اسم رب الأسرة'],
-      ['spouse_name', 'اسم الزوجة/الزوج'],
-      ['id_type', 'نوع الهوية'],
-      ['id_number', 'رقم الهوية'],
-      ['social_status', 'الحالة الاجتماعية'],
-      ['occupation', 'المهنة'],
-      ['males_count', 'الذكور'],
-      ['females_count', 'الإناث'],
-      ['phone', 'الهاتف'],
-      ['alternate_recipient_name', 'المستلم البديل'],
-      ['alternate_recipient_id_number', 'رقم هوية البديل'],
-      ['alternate_recipient_phone', 'هاتف البديل'],
-      ['governorate', 'المحافظة'],
-      ['district', 'المديرية'],
-      ['village', 'القرية/الحي'],
-      ['health_status', 'الحالة الصحية'],
-      ['needs', 'الاحتياجات'],
-      ['war_affected', 'متضرر من الحرب'],
-      ['damage_type', 'نوع الضرر'],
-      ['economic_status', 'الوضع المادي']
-    ];
-
-    function showNotice(element, message) {
-      element.textContent = message;
-      element.style.display = 'block';
-    }
-
-    function hideNotice(element) {
-      element.textContent = '';
-      element.style.display = 'none';
-    }
-
-    function safeText(value) {
-      return value === null || value === undefined || value === ''
-        ? '—'
-        : String(value);
-    }
-
-    function makeCell(value) {
-      const td = document.createElement('td');
-      td.textContent = safeText(value);
-      return td;
-    }
-
-    function makeActionButton(label, className, handler) {
-      const button = document.createElement('button');
-
-      button.type = 'button';
-      button.textContent = label;
-      button.className = className;
-      button.addEventListener('click', handler);
-
-      return button;
-    }
-
-    async function checkAdmin(user) {
-      const { data, error } = await supabaseClient
-        .from('admin_users')
-        .select('user_id')
-        .eq('user_id', user.id)
-        .maybeSingle();
-
-      if (error) throw error;
-
-      return Boolean(data);
-    }
-
-    async function enterDashboard(user) {
-      const isAdmin = await checkAdmin(user);
-
-      if (!isAdmin) {
-        await supabaseClient.auth.signOut();
-
-        throw new Error(
-          'هذا الحساب غير مضاف ضمن المشرفين المصرح لهم.'
-        );
-      }
-
-      loginSection.classList.add('hidden');
-      dashboard.classList.remove('hidden');
-
-      hideNotice(loginError);
-
-      await loadAdminData();
-    }
-
-    async function loadAdminData() {
-      hideNotice(dashboardError);
-
-      pendingBody.replaceChildren();
-      approvedBody.replaceChildren();
-
-      const [pendingResult, approvedResult] = await Promise.all([
-
-        supabaseClient
-          .from('families')
-          .select('*')
-          .eq('status', 'pending')
-          .order('created_at', { ascending: false }),
-
-        supabaseClient
-          .from('families')
-          .select('*')
-          .eq('status', 'approved')
-          .order('created_at', { ascending: false })
-
-      ]);
-
-      if (pendingResult.error) throw pendingResult.error;
-      if (approvedResult.error) throw approvedResult.error;
-
-      pendingRows = pendingResult.data || [];
-      approvedRows = approvedResult.data || [];
-
-      renderRows(pendingRows, pendingBody, 'pending');
-      renderRows(approvedRows, approvedBody, 'approved');
-
-      showNotice(
-        dashboardInfo,
-        `تم تحميل ${pendingRows.length} طلب قيد المراجعة و${approvedRows.length} أسرة معتمدة.`
-      );
-
-      setTimeout(() => hideNotice(dashboardInfo), 5000);
-    }
-
-    function renderRows(rows, tbody, type) {
-      tbody.replaceChildren();
-
-      if (!rows.length) {
-        const tr = document.createElement('tr');
-        const td = document.createElement('td');
-
-        td.colSpan = 21;
-        td.className = 'empty';
-        td.textContent = 'لا توجد سجلات في هذا القسم حالياً.';
-
-        tr.appendChild(td);
-        tbody.appendChild(tr);
-
-        return;
-      }
-
-      rows.forEach(record => {
-        const tr = document.createElement('tr');
-
-        columns.forEach(([key]) => {
-          tr.appendChild(makeCell(record[key]));
-        });
-
-        const actions = document.createElement('td');
-        actions.className = 'actions';
-
-        if (type === 'pending') {
-          actions.appendChild(
-            makeActionButton('اعتماد', 'approve', () =>
-              changeStatus(record.id, 'approved')
-            )
-          );
-
-          actions.appendChild(
-            makeActionButton('رفض', 'reject', () =>
-              changeStatus(record.id, 'rejected')
-            )
-          );
-
-          actions.appendChild(
-            makeActionButton('تعديل', 'edit', () =>
-              editRecord(record)
-            )
-          );
-
-        } else {
-          actions.appendChild(
-            makeActionButton('تعديل', 'edit', () =>
-              editRecord(record)
-            )
-          );
-
-          actions.appendChild(
-            makeActionButton('حذف', 'delete', () =>
-              deleteRecord(record.id)
-            )
-          );
-        }
-
-        tr.appendChild(actions);
-        tbody.appendChild(tr);
-      });
-    }
-
-    async function changeStatus(id, status) {
-      const actionName = status === 'approved' ? 'اعتماد' : 'رفض';
-
-      if (!confirm(`هل أنت متأكد من ${actionName} هذا الطلب؟`)) {
-        return;
-      }
-
-      try {
-        const { error } = await supabaseClient
-          .from('families')
-          .update({ status })
-          .eq('id', id);
-
-        if (error) throw error;
-
-        await loadAdminData();
-
-      } catch (error) {
-        console.error(error);
-
-        showNotice(
-          dashboardError,
-          'تعذر تحديث حالة الطلب. تحقق من صلاحيات المشرف والاتصال.'
-        );
-      }
-    }
-
-    async function editRecord(record) {
-      const updated = {};
-
-      const fields = [
-        ['head_name', 'اسم رب الأسرة'],
-        ['phone', 'رقم الهاتف'],
-        ['needs', 'الاحتياجات'],
-        ['alternate_recipient_name', 'اسم المستلم البديل'],
-        ['alternate_recipient_id_number', 'رقم هوية المستلم البديل'],
-        ['alternate_recipient_phone', 'هاتف المستلم البديل']
-      ];
-
-      for (const [key, label] of fields) {
-        const answer = prompt(
-          `تعديل ${label}:`,
-          record[key] || ''
-        );
-
-        if (answer === null) return;
-
-        updated[key] = answer.trim() || null;
-      }
-
-      try {
-        const { error } = await supabaseClient
-          .from('families')
-          .update(updated)
-          .eq('id', record.id);
-
-        if (error) throw error;
-
-        await loadAdminData();
-
-      } catch (error) {
-        console.error(error);
-
-        showNotice(
-          dashboardError,
-          'تعذر حفظ التعديلات. تحقق من الاتصال والصلاحيات.'
-        );
-      }
-    }
-
-    async function deleteRecord(id) {
-      if (!confirm('هل تريد حذف هذا السجل نهائياً؟ لا يمكن التراجع عن الحذف.')) {
-        return;
-      }
-
-      try {
-        const { error } = await supabaseClient
-          .from('families')
-          .delete()
-          .eq('id', id);
-
-        if (error) throw error;
-
-        await loadAdminData();
-
-      } catch (error) {
-        console.error(error);
-
-        showNotice(
-          dashboardError,
-          'تعذر حذف السجل. تحقق من الاتصال والصلاحيات.'
-        );
-      }
-    }
-
-    // حماية القيم النصية من التحول إلى معادلات Excel.
-    function excelSafe(value) {
-      if (value === null || value === undefined) {
-        return '';
-      }
-
-      let text = String(value);
-
-      if (/^[\s\u0000-\u001f]*[=+\-@]/.test(text)) {
-        text = "'" + text;
-      }
-
-      return text;
-    }
-
-    // إنشاء ملف Excel منظم بصيغة XLSX.
-    async function downloadExcel() {
-      if (!approvedRows.length) {
-        showNotice(
-          dashboardError,
-          'لا توجد أسر معتمدة لتنزيلها حالياً.'
-        );
-
-        return;
-      }
-
-      const downloadBtn = document.getElementById('downloadBtn');
-
-      try {
-        if (typeof ExcelJS === 'undefined') {
-          throw new Error('ExcelJS library is not loaded.');
-        }
-
-        downloadBtn.disabled = true;
-        downloadBtn.textContent = 'جارٍ تجهيز ملف Excel...';
-
-        const workbook = new ExcelJS.Workbook();
-
-        workbook.creator = 'بوابة إدارة الأسر';
-        workbook.subject = 'الكشف النهائي للأسر المعتمدة';
-        workbook.created = new Date();
-
-        const worksheet = workbook.addWorksheet('الكشف النهائي', {
-          views: [
-            {
-              rightToLeft: true,
-              state: 'frozen',
-              ySplit: 1
-            }
-          ]
-        });
-
-        // إعداد الأعمدة.
-        worksheet.columns = columns.map(([key, label]) => ({
-          header: label,
-          key: key,
-          width: Math.min(Math.max(label.length + 5, 16), 35)
-        }));
-
-        // إضافة بيانات الأسر، كل أسرة في صف مستقل.
-        approvedRows.forEach(record => {
-          const row = {};
-
-          columns.forEach(([key]) => {
-            row[key] = excelSafe(record[key]);
-          });
-
-          worksheet.addRow(row);
-        });
-
-        // تنسيق عناوين الجدول.
-        const header = worksheet.getRow(1);
-
-        header.height = 32;
-
-        header.eachCell(cell => {
-          cell.font = {
-            name: 'Arial',
-            size: 12,
-            bold: true,
-            color: { argb: 'FFFFFFFF' }
-          };
-
-          cell.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: 'FF1769AA' }
-          };
-
-          cell.alignment = {
-            horizontal: 'center',
-            vertical: 'middle',
-            wrapText: true
-          };
-
-          cell.border = {
-            top: { style: 'thin', color: { argb: 'FFDCE3E9' } },
-            bottom: { style: 'thin', color: { argb: 'FFDCE3E9' } },
-            left: { style: 'thin', color: { argb: 'FFDCE3E9' } },
-            right: { style: 'thin', color: { argb: 'FFDCE3E9' } }
-          };
-        });
-
-        // تنسيق صفوف البيانات.
-        worksheet.eachRow((row, rowNumber) => {
-          if (rowNumber === 1) return;
-
-          row.height = 26;
-
-          row.eachCell(cell => {
-            cell.font = {
-              name: 'Arial',
-              size: 11,
-              color: { argb: 'FF263238' }
-            };
-
-            cell.alignment = {
-              horizontal: 'right',
-              vertical: 'middle',
-              wrapText: true
-            };
-
-            cell.border = {
-              top: { style: 'thin', color: { argb: 'FFDCE3E9' } },
-              bottom: { style: 'thin', color: { argb: 'FFDCE3E9' } },
-              left: { style: 'thin', color: { argb: 'FFDCE3E9' } },
-              right: { style: 'thin', color: { argb: 'FFDCE3E9' } }
-            };
-
-            if (rowNumber % 2 === 0) {
-              cell.fill = {
-                type: 'pattern',
-                pattern: 'solid',
-                fgColor: { argb: 'FFF0F5FA' }
-              };
-            }
-          });
-        });
-
-        // ضبط عرض الأعمدة حسب محتواها.
-        columns.forEach(([key, label], index) => {
-          const column = worksheet.getColumn(index + 1);
-
-          let maxLength = label.length;
-
-          approvedRows.forEach(record => {
-            const value = String(record[key] ?? '');
-            maxLength = Math.max(maxLength, value.length);
-          });
-
-          column.width = Math.min(
-            Math.max(maxLength + 4, 16),
-            35
-          );
-        });
-
-        // تفعيل التصفية على جميع الأعمدة.
-        worksheet.autoFilter = {
-          from: 'A1',
-          to: `${worksheet.getColumn(columns.length).letter}${approvedRows.length + 1}`
-        };
-
-        // إنشاء ملف XLSX.
-        const buffer = await workbook.xlsx.writeBuffer();
-
-        const blob = new Blob([buffer], {
-          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        });
-
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-
-        const date = new Date().toISOString().slice(0, 10);
-
-        link.href = url;
-        link.download = `الكشف-النهائي-${date}.xlsx`;
-
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-
-        setTimeout(() => {
-          URL.revokeObjectURL(url);
-        }, 1500);
-
-        showNotice(
-          dashboardInfo,
-          'تم تجهيز ملف Excel وتنزيله بنجاح.'
-        );
-
-      } catch (error) {
-        console.error('Excel export error:', error);
-
-        showNotice(
-          dashboardError,
-          'تعذر إنشاء ملف Excel. تحقق من اتصال الإنترنت ثم حاول مجدداً.'
-        );
-
-      } finally {
-        downloadBtn.disabled = false;
-        downloadBtn.textContent = 'تنزيل الكشف Excel';
-      }
-    }
-
-    // تسجيل الدخول.
-    loginForm.addEventListener('submit', async event => {
-      event.preventDefault();
-
-      hideNotice(loginError);
-
-      loginBtn.disabled = true;
-      loginBtn.textContent = 'جارٍ التحقق...';
-
-      try {
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value;
-
-        const { data, error } = await supabaseClient.auth.signInWithPassword({
-          email,
-          password
-        });
-
-        if (error) throw error;
-
-        await enterDashboard(data.user);
-
-      } catch (error) {
-        console.error('Admin sign-in failed:', error);
-
-        showNotice(
-          loginError,
-          error.message === 'Invalid login credentials'
-            ? 'البريد الإلكتروني أو كلمة المرور غير صحيحة.'
-            : (error.message || 'تعذر تسجيل الدخول. تحقق من بيانات الحساب وإعدادات Supabase.')
-        );
-
-      } finally {
-        loginBtn.disabled = false;
-        loginBtn.textContent = 'دخول';
-      }
-    });
-
-    // تسجيل الخروج.
-    document.getElementById('logoutBtn').addEventListener('click', async () => {
-      await supabaseClient.auth.signOut();
-
-      dashboard.classList.add('hidden');
-      loginSection.classList.remove('hidden');
-
-      loginForm.reset();
-    });
-
-    // تحديث البيانات.
-    document.getElementById('refreshBtn').addEventListener('click', async () => {
-      try {
-        await loadAdminData();
-
-      } catch (error) {
-        console.error(error);
-
-        showNotice(
-          dashboardError,
-          'تعذر تحديث البيانات. تحقق من اتصال الإنترنت.'
-        );
-      }
-    });
-
-    // زر تنزيل Excel.
-    document.getElementById('downloadBtn').addEventListener(
-      'click',
-      downloadExcel
-    );
-
-    // التحقق من الجلسة السابقة.
-    (async function initialize() {
-      const {
-        data: { session }
-      } = await supabaseClient.auth.getSession();
-
-      if (!session) return;
-
-      try {
-        await enterDashboard(session.user);
-
-      } catch (error) {
-        console.error(error);
-
-        showNotice(
-          loginError,
-          error.message || 'لا يمكن التحقق من صلاحية هذا الحساب كمشرف.'
-        );
-
-        loginSection.classList.remove('hidden');
-        dashboard.classList.add('hidden');
-      }
-    })();
-
-  </script>
-</body>
-</html>
+<section id="loginSection" class="container login-box">
+<h1>تسجيل دخول المشرف</h1>
+<p>هذه الصفحة مخصصة للمشرفين المعتمدين فقط. استخدم البريد الإلكتروني وكلمة المرور المسجلين في Supabase Authentication.</p>
+<div id="loginError" class="notice error" role="alert"></div>
+<form id="loginForm">
+<label for="email">البريد الإلكتروني</label><input id="email" type="email" autocomplete="username" required>
+<label for="password">كلمة المرور</label><input id="password" type="password" autocomplete="current-password" required>
+<button id="loginBtn" class="primary" type="submit" style="width:100%;margin-top:16px">دخول</button>
+</form></section>
+
+<main id="dashboard" class="hidden">
+<div class="container">
+<div class="toolbar"><h1 style="margin:0">لوحة إدارة البوابة المجتمعية</h1><button id="logoutBtn" class="logout">تسجيل الخروج</button></div>
+<div id="dashboardError" class="notice error" role="alert"></div><div id="dashboardInfo" class="notice info" role="status"></div>
+<p>تظهر هنا الطلبات المسجلة في قاعدة البيانات المشتركة. اعتماد الطلب ينقله إلى الكشف النهائي، ورفضه يغيّر حالته إلى «مرفوض» مع الاحتفاظ بالسجل.</p>
+</div>
+
+<section class="container">
+<div class="toolbar"><h2>الطلبات الواردة (تحت المراجعة والتدقيق)</h2><button id="refreshBtn" class="primary">تحديث البيانات</button></div>
+<div class="table-wrap"><table><thead><tr>
+<th>اسم رب الأسرة</th><th>نوع الأسرة</th><th>نوع الأسرة الأخرى</th><th>اسم الزوجة/الزوج</th><th>نوع الهوية</th><th>رقم الهوية</th>
+<th>الحالة الاجتماعية</th><th>المهنة</th><th>الذكور</th><th>الإناث</th><th>الهاتف</th><th>المستلم البديل</th><th>رقم هوية البديل</th>
+<th>هاتف البديل</th><th>المحافظة</th><th>المديرية</th><th>القرية/الحي</th><th>الحالة الصحية</th><th>الاحتياجات</th>
+<th>متضرر من الحرب</th><th>نوع الضرر</th><th>الوضع المادي</th><th>الإجراءات</th>
+</tr></thead><tbody id="pendingBody"><tr><td class="empty" colspan="23">جارٍ تحميل البيانات...</td></tr></tbody></table></div>
+</section>
+
+<section class="container">
+<div class="toolbar"><h2>الكشف النهائي (الأسر المعتمدة والمقبولة)</h2><button id="downloadBtn" class="download">تنزيل الكشف Excel</button></div>
+<div class="table-wrap"><table><thead><tr>
+<th>اسم رب الأسرة</th><th>نوع الأسرة</th><th>نوع الأسرة الأخرى</th><th>اسم الزوجة/الزوج</th><th>نوع الهوية</th><th>رقم الهوية</th>
+<th>الحالة الاجتماعية</th><th>المهنة</th><th>الذكور</th><th>الإناث</th><th>الهاتف</th><th>المستلم البديل</th><th>رقم هوية البديل</th>
+<th>هاتف البديل</th><th>المحافظة</th><th>المديرية</th><th>القرية/الحي</th><th>الحالة الصحية</th><th>الاحتياجات</th>
+<th>متضرر من الحرب</th><th>نوع الضرر</th><th>الوضع المادي</th><th>الإجراءات</th>
+</tr></thead><tbody id="approvedBody"><tr><td class="empty" colspan="23">جارٍ تحميل البيانات...</td></tr></tbody></table></div>
+</section></main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+<script>
+const SUPABASE_URL='https://iwiakxpsuxzsujdsrehs.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_qI-wgJeZFL4FnCZzuPkSkQ_3cSoyaSu';
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+
+const loginSection=document.getElementById('loginSection'),dashboard=document.getElementById('dashboard');
+const loginForm=document.getElementById('loginForm'),loginBtn=document.getElementById('loginBtn');
+const loginError=document.getElementById('loginError'),dashboardError=document.getElementById('dashboardError');
+const dashboardInfo=document.getElementById('dashboardInfo'),pendingBody=document.getElementById('pendingBody');
+const approvedBody=document.getElementById('approvedBody');
+let pendingRows=[],approvedRows=[];
+
+// نفس قائمة الأعمدة تُستخدم للعرض في الجدولين ولتصدير Excel.
+const columns=[
+['head_name','اسم رب الأسرة'],['family_type','نوع الأسرة'],['family_type_other','نوع الأسرة الأخرى'],
+['spouse_name','اسم الزوجة/الزوج'],['id_type','نوع الهوية'],['id_number','رقم الهوية'],
+['social_status','الحالة الاجتماعية'],['occupation','المهنة'],['males_count','الذكور'],['females_count','الإناث'],
+['phone','الهاتف'],['alternate_recipient_name','المستلم البديل'],
+['alternate_recipient_id_number','رقم هوية البديل'],['alternate_recipient_phone','هاتف البديل'],
+['governorate','المحافظة'],['district','المديرية'],['village','القرية/الحي'],
+['health_status','الحالة الصحية'],['needs','الاحتياجات'],['war_affected','متضرر من الحرب'],
+['damage_type','نوع الضرر'],['economic_status','الوضع المادي']
+];
+
+function showNotice(element,message){element.textContent=message;element.style.display='block'}
+function hideNotice(element){element.textContent='';element.style.display='none'}
+function safeText(value){return value===null||value===undefined||value===''?'—':String(value)}
+function makeCell(value){const td=document.createElement('td');td.textContent=safeText(value);return td}
+function makeActionButton(label,className,handler){
+ const button=document.createElement('button');button.type='button';button.textContent=label;
+ button.className=className;button.addEventListener('click',handler);return button;
+}
+async function checkAdmin(user){
+ const {data,error}=await supabaseClient.from('admin_users').select('user_id').eq('user_id',user.id).maybeSingle();
+ if(error)throw error;return Boolean(data);
+}
+async function enterDashboard(user){
+ const isAdmin=await checkAdmin(user);
+ if(!isAdmin){await supabaseClient.auth.signOut();throw new Error('هذا الحساب غير مضاف ضمن المشرفين المصرح لهم.')}
+ loginSection.classList.add('hidden');dashboard.classList.remove('hidden');hideNotice(loginError);await loadAdminData();
+}
+async function loadAdminData(){
+ hideNotice(dashboardError);pendingBody.replaceChildren();approvedBody.replaceChildren();
+ const [pendingResult,approvedResult]=await Promise.all([
+  supabaseClient.from('families').select('*').eq('status','pending').order('created_at',{ascending:false}),
+  supabaseClient.from('families').select('*').eq('status','approved').order('created_at',{ascending:false})
+ ]);
+ if(pendingResult.error)throw pendingResult.error;if(approvedResult.error)throw approvedResult.error;
+ pendingRows=pendingResult.data||[];approvedRows=approvedResult.data||[];
+ renderRows(pendingRows,pendingBody,'pending');renderRows(approvedRows,approvedBody,'approved');
+ showNotice(dashboardInfo,`تم تحميل ${pendingRows.length} طلب قيد المراجعة و${approvedRows.length} أسرة معتمدة.`);
+ setTimeout(()=>hideNotice(dashboardInfo),5000);
+}
+function renderRows(rows,tbody,type){
+ tbody.replaceChildren();
+ if(!rows.length){
+  const tr=document.createElement('tr'),td=document.createElement('td');
+  td.colSpan=columns.length+1;td.className='empty';td.textContent='لا توجد سجلات في هذا القسم حالياً.';
+  tr.appendChild(td);tbody.appendChild(tr);return;
+ }
+ rows.forEach(record=>{
+  const tr=document.createElement('tr');columns.forEach(([key])=>tr.appendChild(makeCell(record[key])));
+  const actions=document.createElement('td');actions.className='actions';
+  if(type==='pending'){
+   actions.appendChild(makeActionButton('اعتماد','approve',()=>changeStatus(record.id,'approved')));
+   actions.appendChild(makeActionButton('رفض','reject',()=>changeStatus(record.id,'rejected')));
+   actions.appendChild(makeActionButton('تعديل','edit',()=>editRecord(record)));
+  }else{
+   actions.appendChild(makeActionButton('تعديل','edit',()=>editRecord(record)));
+   actions.appendChild(makeActionButton('حذف','delete',()=>deleteRecord(record.id)));
+  }
+  tr.appendChild(actions);tbody.appendChild(tr);
+ });
+}
+async function changeStatus(id,status){
+ const actionName=status==='approved'?'اعتماد':'رفض';if(!confirm(`هل أنت متأكد من ${actionName} هذا الطلب؟`))return;
+ try{
+  const {error}=await supabaseClient.from('families').update({status}).eq('id',id);
+  if(error)throw error;await loadAdminData();
+ }catch(error){console.error(error);showNotice(dashboardError,'تعذر تحديث حالة الطلب. تحقق من صلاحيات المشرف والاتصال.')}
+}
+async function editRecord(record){
+ const updated={};
+ const fields=[
+ ['head_name','اسم رب الأسرة'],['family_type','نوع الأسرة'],
+ ['family_type_other','نوع الأسرة الأخرى (اتركه فارغاً إذا لم ينطبق)'],
+ ['id_type','نوع الهوية'],['phone','رقم الهاتف'],['needs','الاحتياجات'],
+ ['alternate_recipient_name','اسم المستلم البديل'],
+ ['alternate_recipient_id_number','رقم هوية المستلم البديل'],
+ ['alternate_recipient_phone','هاتف المستلم البديل']
+ ];
+ for(const [key,label] of fields){
+  const answer=prompt(`تعديل ${label}:`,record[key]||'');if(answer===null)return;
+  updated[key]=answer.trim()||null;
+ }
+ if(updated.family_type!=='أخرى')updated.family_type_other=null;
+ try{
+  const {error}=await supabaseClient.from('families').update(updated).eq('id',record.id);
+  if(error)throw error;await loadAdminData();
+ }catch(error){console.error(error);showNotice(dashboardError,'تعذر حفظ التعديلات. تحقق من الاتصال والصلاحيات.')}
+}
+async function deleteRecord(id){
+ if(!confirm('هل تريد حذف هذا السجل نهائياً؟ لا يمكن التراجع عن الحذف.'))return;
+ try{
+  const {error}=await supabaseClient.from('families').delete().eq('id',id);
+  if(error)throw error;await loadAdminData();
+ }catch(error){console.error(error);showNotice(dashboardError,'تعذر حذف السجل. تحقق من الاتصال والصلاحيات.')}
+}
+function excelSafe(value){
+ if(value===null||value===undefined)return '';
+ let text=String(value);if(/^[\s\u0000-\u001f]*[=+\-@]/.test(text))text="'"+text;return text;
+}
+async function downloadExcel(){
+ if(!approvedRows.length){showNotice(dashboardError,'لا توجد أسر معتمدة لتنزيلها حالياً.');return}
+ const downloadBtn=document.getElementById('downloadBtn');
+ try{
+  if(typeof ExcelJS==='undefined')throw new Error('ExcelJS library is not loaded.');
+  downloadBtn.disabled=true;downloadBtn.textContent='جارٍ تجهيز ملف Excel...';
+  const workbook=new ExcelJS.Workbook();workbook.creator='بوابة إدارة الأسر';
+  workbook.subject='الكشف النهائي للأسر المعتمدة';workbook.created=new Date();
+  const worksheet=workbook.addWorksheet('الكشف النهائي',{views:[{rightToLeft:true,state:'frozen',ySplit:1}]});
+  worksheet.columns=columns.map(([key,label])=>({header:label,key,width:Math.min(Math.max(label.length+5,16),35)}));
+  approvedRows.forEach(record=>{const row={};columns.forEach(([key])=>row[key]=excelSafe(record[key]));worksheet.addRow(row)});
+  const header=worksheet.getRow(1);header.height=32;
+  header.eachCell(cell=>{
+   cell.font={name:'Arial',size:12,bold:true,color:{argb:'FFFFFFFF'}};
+   cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1769AA'}};
+   cell.alignment={horizontal:'center',vertical:'middle',wrapText:true};
+   cell.border={top:{style:'thin',color:{argb:'FFDCE3E9'}},bottom:{style:'thin',color:{argb:'FFDCE3E9'}},left:{style:'thin',color:{argb:'FFDCE3E9'}},right:{style:'thin',color:{argb:'FFDCE3E9'}}};
+  });
+  worksheet.eachRow((row,rowNumber)=>{
+   if(rowNumber===1)return;row.height=26;
+   row.eachCell(cell=>{
+    cell.font={name:'Arial',size:11,color:{argb:'FF263238'}};
+    cell.alignment={horizontal:'right',vertical:'middle',wrapText:true};
+    cell.border={top:{style:'thin',color:{argb:'FFDCE3E9'}},bottom:{style:'thin',color:{argb:'FFDCE3E9'}},left:{style:'thin',color:{argb:'FFDCE3E9'}},right:{style:'thin',color:{argb:'FFDCE3E9'}}};
+    if(rowNumber%2===0)cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF0F5FA'}};
+   });
+  });
+  columns.forEach(([key,label],index)=>{
+   const column=worksheet.getColumn(index+1);let maxLength=label.length;
+   approvedRows.forEach(record=>maxLength=Math.max(maxLength,String(record[key]??'').length));
+   column.width=Math.min(Math.max(maxLength+4,16),35);
+  });
+  worksheet.autoFilter={from:'A1',to:`${worksheet.getColumn(columns.length).letter}${approvedRows.length+1}`};
+  const buffer=await workbook.xlsx.writeBuffer();
+  const blob=new Blob([buffer],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const url=URL.createObjectURL(blob),link=document.createElement('a');
+  const date=new Date().toISOString().slice(0,10);link.href=url;link.download=`الكشف-النهائي-${date}.xlsx`;
+  document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+  showNotice(dashboardInfo,'تم تجهيز ملف Excel وتنزيله بنجاح.');
+ }catch(error){console.error('Excel export error:',error);showNotice(dashboardError,'تعذر إنشاء ملف Excel. تحقق من اتصال الإنترنت ثم حاول مجدداً.')}
+ finally{downloadBtn.disabled=false;downloadBtn.textContent='تنزيل الكشف Excel'}
+}
+loginForm.addEventListener('submit',async event=>{
+ event.preventDefault();hideNotice(loginError);loginBtn.disabled=true;loginBtn.textContent='جارٍ التحقق...';
+ try{
+  const email=document.getElementById('email').value.trim(),password=document.getElementById('password').value;
+  const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});if(error)throw error;
+  await enterDashboard(data.user);
+ }catch(error){
+  console.error('Admin sign-in failed:',error);
+  showNotice(loginError,error.message==='Invalid login credentials'?'البريد الإلكتروني أو كلمة المرور غير صحيحة.':(error.message||'تعذر تسجيل الدخول. تحقق من بيانات الحساب وإعدادات Supabase.'));
+ }finally{loginBtn.disabled=false;loginBtn.textContent='دخول'}
+});
+document.getElementById('logoutBtn').addEventListener('click',async()=>{
+ await supabaseClient.auth.signOut();dashboard.classList.add('hidden');loginSection.classList.remove('hidden');loginForm.reset();
+});
+document.getElementById('refreshBtn').addEventListener('click',async()=>{
+ try{await loadAdminData()}catch(error){console.error(error);showNotice(dashboardError,'تعذر تحديث البيانات. تحقق من اتصال الإنترنت.')}
+});
+document.getElementById('downloadBtn').addEventListener('click',downloadExcel);
+(async function initialize(){
+ const {data:{session}}=await supabaseClient.auth.getSession();if(!session)return;
+ try{await enterDashboard(session.user)}catch(error){
+  console.error(error);showNotice(loginError,error.message||'لا يمكن التحقق من صلاحية هذا الحساب كمشرف.');
+  loginSection.classList.remove('hidden');dashboard.classList.add('hidden');
+ }
+})();
+</script></body></html>
