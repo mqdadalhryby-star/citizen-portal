@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم المشرف - مراجعة بيانات الأسر</title>
+    <title>لوحة تحكم المشرف - البوابة المجتمعية</title>
     <style>
         body {
             font-family: Tahoma, sans-serif;
@@ -27,6 +27,9 @@
             color: #333;
             border-bottom: 2px solid #007bff;
             padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         table {
             width: 100%;
@@ -68,7 +71,17 @@
             font-size: 12px;
         }
         .btn-reject:hover { background-color: #c82333; }
-        .badge-pending { color: #856404; background-color: #fff3cd; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+        .btn-download {
+            background-color: #17a2b8;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .btn-download:hover { background-color: #138496; }
         .badge-approved { color: #155724; background-color: #d4edda; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
     </style>
 </head>
@@ -101,7 +114,10 @@
 </div>
 
 <div class="container" style="background-color: #fdfefe; border: 2px solid #28a745;">
-    <h2 style="border-color: #28a745; color: #155724;">2. الكشف النهائي (الأسر المعتمدة والمقبولة)</h2>
+    <h2 style="border-color: #28a745; color: #155724;">
+        <span>2. الكشف النهائي (الأسر المعتمدة والمقبولة)</span>
+        <button class="btn-download" onclick="downloadApprovedCSV()">📥 تحميل الكشف المعتمد (Excel)</button>
+    </h2>
     <table>
         <thead>
             <tr>
@@ -137,7 +153,6 @@
         let pendingList = JSON.parse(localStorage.getItem('pendingCitizens')) || [];
         let approvedList = JSON.parse(localStorage.getItem('approvedCitizens')) || [];
 
-        // تعبئة جدول الطلبات المعلقة
         if (pendingList.length === 0) {
             pendingBody.innerHTML = `<tr><td colspan="13" style="padding: 15px; color: #777;">لا توجد طلبات جديدة بانتظار المراجعة.</td></tr>`;
         } else {
@@ -163,7 +178,6 @@
             });
         }
 
-        // تعبئة جدول الأسر المعتمدة نهائياً
         if (approvedList.length === 0) {
             approvedBody.innerHTML = `<tr><td colspan="13" style="padding: 15px; color: #777;">لم يتم اعتماد أي أسرة في الكشف النهائي حتى الآن.</td></tr>`;
         } else {
@@ -187,13 +201,12 @@
         }
     }
 
-    // زر الموافقة: ينقل الطلب من المعلق إلى المعتمد نهائياً
     function approveItem(index) {
         let pendingList = JSON.parse(localStorage.getItem('pendingCitizens')) || [];
         let approvedList = JSON.parse(localStorage.getItem('approvedCitizens')) || [];
 
-        let itemToMove = pendingList.splice(index, 1)[0]; // سحبه من المعلق
-        approvedList.push(itemToMove);                    // إضافته للمعتمد
+        let itemToMove = pendingList.splice(index, 1)[0]; 
+        approvedList.push(itemToMove);                    
 
         localStorage.setItem('pendingCitizens', JSON.stringify(pendingList));
         localStorage.setItem('approvedCitizens', JSON.stringify(approvedList));
@@ -201,7 +214,6 @@
         loadAdminData();
     }
 
-    // زر الرفض: يحذف الطلب نهائياً
     function rejectItem(index) {
         if(confirm("هل أنت متأكد من رفض وحذف هذه البيانات؟")) {
             let pendingList = JSON.parse(localStorage.getItem('pendingCitizens')) || [];
@@ -209,6 +221,48 @@
             localStorage.setItem('pendingCitizens', JSON.stringify(pendingList));
             loadAdminData();
         }
+    }
+
+    function downloadApprovedCSV() {
+        let approvedList = JSON.parse(localStorage.getItem('approvedCitizens')) || [];
+        if (approvedList.length === 0) {
+            alert("عذراً، لا توجد أي أسر معتمدة في الكشف النهائي حالياً للتحميل!");
+            return;
+        }
+
+        let csvContent = "\uFEFF"; 
+        csvContent += "اسم رب الأسرة,اسم الزوجة,نوع الهوية,رقم الهوية,الحالة الاجتماعية,المهنة,عدد الذكور,عدد الإناث,رقم الهاتف,المحافظة,العزلة,القرية,الحالة الصحية والمرض,احتياجات الأسرة,متضررة من الحرب,نوع الضرر,وضع الأسرة المادي\n";
+
+        approvedList.forEach(item => {
+            let row = [
+                `"${item.headName || ''}"`,
+                `"${item.spouseName || ''}"`,
+                `"${item.idType || ''}"`,
+                `"${item.idNumber || ''}"`,
+                `"${item.socialStatus || ''}"`,
+                `"${item.occupation || ''}"`,
+                item.malesCount || 0,
+                item.femalesCount || 0,
+                `"${item.phone || ''}"`,
+                `"${item.governorate || ''}"`,
+                `"${item.district || ''}"`,
+                `"${item.village || ''}"`,
+                `"${item.healthStatus || ''}"`,
+                `"${item.needs || ''}"`,
+                `"${item.warAffected || ''}"`,
+                `"${item.damageType || ''}"`,
+                `"${item.economicStatus || ''}"`
+            ];
+            csvContent += row.join(",") + "\n";
+        });
+
+        let encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
+        let link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "approved_families_registry.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 
     window.onload = loadAdminData;
