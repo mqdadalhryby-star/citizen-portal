@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>استمارة تسجیل الأسر - البوابة المجتمعية</title>
+    <title>استمارة تسجيل الأسر - البوابة المجتمعية</title>
     <style>
         body {
             font-family: Tahoma, sans-serif;
@@ -66,6 +66,16 @@
         }
         .btn-submit:hover {
             background-color: #218838;
+        }
+        .success-msg {
+            display: none;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 5px;
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -180,7 +190,8 @@
             </select>
         </div>
 
-        <button type="submit" class="btn-submit">إرسال البيانات عبر واتساب 📱</button>
+        <button type="submit" class="btn-submit">إرسال وحفظ البيانات 📥</button>
+        <div id="successMsg" class="success-msg">تم إرسال وحفظ بيانات الأسرة بنجاح لتظهر في لوحة التحكم!</div>
     </form>
 </div>
 
@@ -188,48 +199,40 @@
     document.getElementById('familyForm').addEventListener('submit', function(e) {
         e.preventDefault();
 
-        // جمع البيانات من الحقول
-        let headName = document.getElementById('headName').value;
-        let spouseName = document.getElementById('spouseName').value;
-        let idType = document.getElementById('idType').value;
-        let idNumber = document.getElementById('idNumber').value;
-        let socialStatus = document.getElementById('socialStatus').value;
-        let occupation = document.getElementById('occupation').value;
-        let malesCount = document.getElementById('malesCount').value;
-        let femalesCount = document.getElementById('femalesCount').value;
-        let phone = document.getElementById('phone').value;
-        let governorate = document.getElementById('governorate').value;
-        let district = document.getElementById('district').value;
-        let village = document.getElementById('village').value;
-        let healthStatus = document.getElementById('healthStatus').value;
-        let needs = document.getElementById('needs').value;
-        let warAffected = document.getElementById('warAffected').value;
-        let damageType = document.getElementById('damageType').value;
-        let economicStatus = document.getElementById('economicStatus').value;
+        // 1. تجميع بيانات الأسرة المدخلة
+        let formData = {
+            headName: document.getElementById('headName').value,
+            spouseName: document.getElementById('spouseName').value,
+            idType: document.getElementById('idType').value,
+            idNumber: document.getElementById('idNumber').value,
+            socialStatus: document.getElementById('socialStatus').value,
+            occupation: document.getElementById('occupation').value,
+            malesCount: document.getElementById('malesCount').value,
+            femalesCount: document.getElementById('femalesCount').value,
+            phone: document.getElementById('phone').value,
+            governorate: document.getElementById('governorate').value,
+            district: document.getElementById('district').value,
+            village: document.getElementById('village').value,
+            healthStatus: document.getElementById('healthStatus').value,
+            needs: document.getElementById('needs').value,
+            warAffected: document.getElementById('warAffected').value,
+            damageType: document.getElementById('damageType').value,
+            economicStatus: document.getElementById('economicStatus').value
+        };
 
-        // تنسيق رسالة واتساب باحترافية
-        let message = `📋 *طلب تسجيل أسرة جديد*:\n\n` +
-                      `👤 *اسم رب الأسرة:* ${headName}\n` +
-                      `👩 *اسم الزوجة:* ${spouseName || 'غير متوفر'}\n` +
-                      `🆔 *الهوية:* ${idType} (${idNumber})\n` +
-                      `💍 *الحالة الاجتماعية:* ${socialStatus}\n` +
-                      `💼 *المهنة:* ${occupation || 'غير محدد'}\n` +
-                      `👥 *عدد الأفراد:* ذكور (${malesCount}) | إناث (${femalesCount})\n` +
-                      `📱 *رقم الهاتف:* ${phone}\n` +
-                      `📍 *العنوان:* ${governorate} - ${district} - ${village}\n` +
-                      `🩺 *الحالة الصحية:* ${healthStatus || 'لا يوجد'}\n` +
-                      `📦 *الاحتياجات:* ${needs || 'لا يوجد'}\n` +
-                      `⚠️ *متضررة من الحرب:* ${warAffected} (${damageType || 'لا يوجد'})\n` +
-                      `💰 *الوضع المادي:* ${economicStatus}`;
+        // 2. جلب الطلبات السابقة وتحديثها وإضافة الطلب الجديد تتابعياً
+        let pendingList = JSON.parse(localStorage.getItem('pendingCitizens')) || [];
+        pendingList.push(formData);
+        localStorage.setItem('pendingCitizens', JSON.stringify(pendingList));
 
-        let encodedMessage = encodeURIComponent(message);
+        // 3. إظهار رسالة النجاح وتفريغ الحقول للاستمارة التالية
+        let successDiv = document.getElementById('successMsg');
+        successDiv.style.display = 'block';
+        document.getElementById('familyForm').reset();
 
-        // ⚠️ هام: قم بتغيير الرقم أدناه إلى رقم هاتفك الشخصي مع رمز الدولة (بدون علامة +)
-        let whatsappNumber = "967733368093"; 
-
-        // فتح رابط واتساب بالرسالة المجهزة
-        let whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
-        window.open(whatsappURL, '_blank');
+        setTimeout(() => {
+            successDiv.style.display = 'none';
+        }, 4000);
     });
 </script>
 
