@@ -1,336 +1,431 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم المشرف - البوابة المجتمعية</title>
-    <style>
-        body {
-            font-family: Tahoma, sans-serif;
-            background-color: #f4f6f9;
-            margin: 0;
-            padding: 20px;
-            direction: rtl;
-            text-align: right;
-        }
-        .container {
-            max-width: 100%;
-            margin: auto;
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            overflow-x: auto;
-            margin-bottom: 30px;
-        }
-        h2 {
-            color: #333;
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            min-width: 1300px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: center;
-            font-size: 13px;
-        }
-        th {
-            background-color: #007bff;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        .btn-approve {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            margin-bottom: 5px;
-        }
-        .btn-approve:hover { background-color: #218838; }
-        .btn-reject {
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-        .btn-reject:hover { background-color: #c82333; }
-        .btn-edit {
-            background-color: #ffc107;
-            color: #333;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 11px;
-            font-weight: bold;
-            margin-bottom: 4px;
-        }
-        .btn-edit:hover { background-color: #e0a800; }
-        .btn-delete-approved {
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 11px;
-            font-weight: bold;
-        }
-        .btn-delete-approved:hover { background-color: #c82333; }
-        .btn-download {
-            background-color: #17a2b8;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-        }
-        .btn-download:hover { background-color: #138496; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1769aa">
+  <title>لوحة إدارة البوابة المجتمعية</title>
+  <style>
+    *{box-sizing:border-box}
+    body{font-family:Tahoma,Arial,sans-serif;background:#f4f6f9;margin:0;padding:20px;color:#263238}
+    .container{max-width:100%;background:#fff;overflow-x:auto;padding:20px;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.07);margin:0 auto 25px}
+    h1{font-size:23px;color:#1769aa;text-align:center;margin:5px 0 22px}
+    h2{font-size:19px;color:#1769aa;margin:8px 0 15px}
+    .login-box{max-width:430px;margin:45px auto}
+    .login-box p{color:#687782;line-height:1.7;font-size:14px}
+    label{display:block;font-weight:bold;margin:12px 0 6px;font-size:14px}
+    input,textarea{width:100%;padding:11px;border:1px solid #ccd5dd;border-radius:7px;font:inherit}
+    button{border:0;border-radius:6px;padding:9px 13px;font:inherit;cursor:pointer;margin:2px}
+    button:disabled{opacity:.6;cursor:wait}
+    .primary{background:#1769aa;color:#fff}.approve{background:#28a745;color:#fff}.reject{background:#dc3545;color:#fff}
+    .edit{background:#ffc107;color:#222}.delete{background:#dc3545;color:#fff}.download{background:#1769aa;color:#fff}
+    .logout{background:#687782;color:#fff}
+    .toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+    .table-wrap{width:100%;overflow-x:auto}
+    table{width:100%;min-width:1650px;border-collapse:collapse;font-size:13px}
+    th,td{border:1px solid #dce3e9;padding:9px;text-align:right;vertical-align:top;line-height:1.6}
+    th{background:#1769aa;color:#fff;white-space:nowrap}
+    tbody tr:nth-child(even){background:#f8fafc}
+    td.actions{white-space:nowrap}
+    .notice{padding:11px 13px;border-radius:7px;margin:12px 0;line-height:1.7;font-size:14px;display:none}
+    .error{background:#fff0f0;color:#a32323;border:1px solid #f0c3c3}
+    .info{background:#eef6ff;color:#174f7a;border:1px solid #c9e1f5}
+    .hidden{display:none!important}
+    .empty{text-align:center;color:#71808a;padding:22px}
+    @media(max-width:600px){body{padding:9px}.container{padding:13px}.toolbar{align-items:flex-start}h1{font-size:20px}}
+  </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>1. الطلبات الواردة (تحت المراجعة والتدقيق)</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>اسم رب الأسرة</th>
-                <th>اسم الزوجة</th>
-                <th>نوع الهوية ورقمها</th>
-                <th>الحالة الاجتماعية</th>
-                <th>المهنة</th>
-                <th>الأفراد (ذكور/إناث)</th>
-                <th>رقم الهاتف</th>
-                <th>محل الإقامة</th>
-                <th>الحالة الصحية / المرض</th>
-                <th>الاحتياجات</th>
-                <th>الضرر من الحرب</th>
-                <th>الوضع المادي</th>
-                <th>إجراءات المشرف</th>
-            </tr>
-        </thead>
-        <tbody id="pendingTable">
-            <!-- الطلبات المعلقة -->
-        </tbody>
-    </table>
-</div>
+  <section id="loginSection" class="container login-box">
+    <h1>تسجيل دخول المشرف</h1>
+    <p>هذه الصفحة مخصصة للمشرفين المعتمدين فقط. استخدم البريد الإلكتروني وكلمة المرور المسجلين في Supabase Authentication.</p>
+    <div id="loginError" class="notice error" role="alert"></div>
+    <form id="loginForm">
+      <label for="email">البريد الإلكتروني</label>
+      <input id="email" type="email" autocomplete="username" required>
+      <label for="password">كلمة المرور</label>
+      <input id="password" type="password" autocomplete="current-password" required>
+      <button id="loginBtn" class="primary" type="submit" style="width:100%;margin-top:16px">دخول</button>
+    </form>
+  </section>
 
-<div class="container" style="background-color: #fdfefe; border: 2px solid #28a745;">
-    <h2 style="border-color: #28a745; color: #155724;">
-        <span>2. الكشف النهائي (الأسر المعتمدة والمقبولة)</span>
-        <button class="btn-download" onclick="downloadApprovedCSV()">📥 تحميل الكشف المعتمد (Excel)</button>
-    </h2>
-    <table>
-        <thead>
-            <tr>
-                <th>اسم رب الأسرة</th>
-                <th>اسم الزوجة</th>
-                <th>نوع الهوية ورقمها</th>
-                <th>الحالة الاجتماعية</th>
-                <th>المهنة</th>
-                <th>الأفراد (ذكور/إناث)</th>
-                <th>رقم الهاتف</th>
-                <th>محل الإقامة</th>
-                <th>الحالة الصحية / المرض</th>
-                <th>الاحتياجات</th>
-                <th>الضرر من الحرب</th>
-                <th>الوضع المادي</th>
-                <th>إجراءات الكشف النهائي</th>
-            </tr>
-        </thead>
-        <tbody id="approvedTable">
-            <!-- الأسر المقبولة نهائياً -->
-        </tbody>
-    </table>
-</div>
+  <main id="dashboard" class="hidden">
+    <div class="container">
+      <div class="toolbar">
+        <h1 style="margin:0">لوحة إدارة البوابة المجتمعية</h1>
+        <button id="logoutBtn" class="logout">تسجيل الخروج</button>
+      </div>
+      <div id="dashboardError" class="notice error" role="alert"></div>
+      <div id="dashboardInfo" class="notice info" role="status"></div>
+      <p>تظهر هنا الطلبات المسجلة في قاعدة البيانات المشتركة. اعتماد الطلب ينقله إلى الكشف النهائي، ورفضه يغيّر حالته إلى «مرفوض» مع الاحتفاظ بالسجل.</p>
+    </div>
 
-<script>
-    function loadAdminData() {
-        const pendingBody = document.getElementById('pendingTable');
-        const approvedBody = document.getElementById('approvedTable');
-        
-        pendingBody.innerHTML = '';
-        approvedBody.innerHTML = '';
+    <section class="container">
+      <div class="toolbar">
+        <h2>الطلبات الواردة (تحت المراجعة والتدقيق)</h2>
+        <button id="refreshBtn" class="primary">تحديث البيانات</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>اسم رب الأسرة</th><th>اسم الزوجة/الزوج</th><th>نوع الهوية</th><th>رقم الهوية</th>
+            <th>الحالة الاجتماعية</th><th>المهنة</th><th>الذكور</th><th>الإناث</th><th>الهاتف</th>
+            <th>المستلم البديل</th><th>رقم هوية البديل</th><th>هاتف البديل</th>
+            <th>المحافظة</th><th>المديرية</th><th>القرية/الحي</th><th>الحالة الصحية</th>
+            <th>الاحتياجات</th><th>متضرر من الحرب</th><th>نوع الضرر</th><th>الوضع المادي</th><th>الإجراءات</th>
+          </tr></thead>
+          <tbody id="pendingBody"><tr><td class="empty" colspan="21">جارٍ تحميل البيانات...</td></tr></tbody>
+        </table>
+      </div>
+    </section>
 
-        let pendingList = JSON.parse(localStorage.getItem('pendingCitizens')) || [];
-        let approvedList = JSON.parse(localStorage.getItem('approvedCitizens')) || [];
+    <section class="container">
+      <div class="toolbar">
+        <h2>الكشف النهائي (الأسر المعتمدة والمقبولة)</h2>
+        <button id="downloadBtn" class="download">تنزيل الكشف CSV / Excel</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>اسم رب الأسرة</th><th>اسم الزوجة/الزوج</th><th>نوع الهوية</th><th>رقم الهوية</th>
+            <th>الحالة الاجتماعية</th><th>المهنة</th><th>الذكور</th><th>الإناث</th><th>الهاتف</th>
+            <th>المستلم البديل</th><th>رقم هوية البديل</th><th>هاتف البديل</th>
+            <th>المحافظة</th><th>المديرية</th><th>القرية/الحي</th><th>الحالة الصحية</th>
+            <th>الاحتياجات</th><th>متضرر من الحرب</th><th>نوع الضرر</th><th>الوضع المادي</th><th>الإجراءات</th>
+          </tr></thead>
+          <tbody id="approvedBody"><tr><td class="empty" colspan="21">جارٍ تحميل البيانات...</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
 
-        // تعبئة الطلبات المعلقة
-        if (pendingList.length === 0) {
-            pendingBody.innerHTML = `<tr><td colspan="13" style="padding: 15px; color: #777;">لا توجد طلبات جديدة بانتظار المراجعة.</td></tr>`;
-        } else {
-            pendingList.forEach((item, index) => {
-                pendingBody.innerHTML += `<tr>
-                    <td>${item.headName || '-'}</td>
-                    <td>${item.spouseName || '-'}</td>
-                    <td>${item.idType}: ${item.idNumber || '-'}</td>
-                    <td>${item.socialStatus || '-'}</td>
-                    <td>${item.occupation || '-'}</td>
-                    <td>ذكور: ${item.malesCount || 0} <br> إناث: ${item.femalesCount || 0}</td>
-                    <td>${item.phone || '-'}</td>
-                    <td>${item.governorate} / ${item.district} / ${item.village}</td>
-                    <td>${item.healthStatus || '-'}</td>
-                    <td>${item.needs || '-'}</td>
-                    <td>${item.warAffected || '-'} (${item.damageType || 'لا يوجد'})</td>
-                    <td>${item.economicStatus || '-'}</td>
-                    <td>
-                        <button class="btn-approve" onclick="approveItem(${index})">موافق (اعتماد)</button><br>
-                        <button class="btn-reject" onclick="rejectItem(${index})">رفض (حذف)</button>
-                    </td>
-                </tr>`;
-            });
-        }
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // استخدم المفتاح Publishable فقط في المتصفح. لا تضع service_role هنا أبداً.
+    const SUPABASE_URL = 'https://iwiakxpsuxzsujdsrehs.supabase.co';
+    const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_qI-wgJeZFL4FnCZzuPkSkQ_3cSoyaSu';
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
-        // تعبئة الكشف النهائي مع أزرار التعديل والحذف
-        if (approvedList.length === 0) {
-            approvedBody.innerHTML = `<tr><td colspan="13" style="padding: 15px; color: #777;">لم يتم اعتماد أي أسرة في الكشف النهائي حتى الآن.</td></tr>`;
-        } else {
-            approvedList.forEach((item, index) => {
-                approvedBody.innerHTML += `<tr>
-                    <td>${item.headName || '-'}</td>
-                    <td>${item.spouseName || '-'}</td>
-                    <td>${item.idType}: ${item.idNumber || '-'}</td>
-                    <td>${item.socialStatus || '-'}</td>
-                    <td>${item.occupation || '-'}</td>
-                    <td>ذكور: ${item.malesCount || 0} <br> إناث: ${item.femalesCount || 0}</td>
-                    <td>${item.phone || '-'}</td>
-                    <td>${item.governorate} / ${item.district} / ${item.village}</td>
-                    <td>${item.healthStatus || '-'}</td>
-                    <td>${item.needs || '-'}</td>
-                    <td>${item.warAffected || '-'} (${item.damageType || 'لا يوجد'})</td>
-                    <td>${item.economicStatus || '-'}</td>
-                    <td>
-                        <button class="btn-edit" onclick="editApprovedItem(${index})">✏️ تعديل</button><br>
-                        <button class="btn-delete-approved" onclick="deleteApprovedItem(${index})">❌ حذف</button>
-                    </td>
-                </tr>`;
-            });
-        }
+    const loginSection = document.getElementById('loginSection');
+    const dashboard = document.getElementById('dashboard');
+    const loginForm = document.getElementById('loginForm');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginError = document.getElementById('loginError');
+    const dashboardError = document.getElementById('dashboardError');
+    const dashboardInfo = document.getElementById('dashboardInfo');
+    const pendingBody = document.getElementById('pendingBody');
+    const approvedBody = document.getElementById('approvedBody');
+
+    let pendingRows = [];
+    let approvedRows = [];
+
+    const columns = [
+      ['head_name','اسم رب الأسرة'],['spouse_name','اسم الزوجة/الزوج'],['id_type','نوع الهوية'],
+      ['id_number','رقم الهوية'],['social_status','الحالة الاجتماعية'],['occupation','المهنة'],
+      ['males_count','الذكور'],['females_count','الإناث'],['phone','الهاتف'],
+      ['alternate_recipient_name','المستلم البديل'],['alternate_recipient_id_number','رقم هوية البديل'],
+      ['alternate_recipient_phone','هاتف البديل'],['governorate','المحافظة'],['district','المديرية'],
+      ['village','القرية/الحي'],['health_status','الحالة الصحية'],['needs','الاحتياجات'],
+      ['war_affected','متضرر من الحرب'],['damage_type','نوع الضرر'],['economic_status','الوضع المادي']
+    ];
+
+    function showNotice(element, message) {
+      element.textContent = message;
+      element.style.display = 'block';
     }
 
-    // نقل الطلب من المعلق إلى المعتمد
-    function approveItem(index) {
-        let pendingList = JSON.parse(localStorage.getItem('pendingCitizens')) || [];
-        let approvedList = JSON.parse(localStorage.getItem('approvedCitizens')) || [];
-
-        let itemToMove = pendingList.splice(index, 1)[0]; 
-        approvedList.push(itemToMove);                    
-
-        localStorage.setItem('pendingCitizens', JSON.stringify(pendingList));
-        localStorage.setItem('approvedCitizens', JSON.stringify(approvedList));
-
-        loadAdminData();
+    function hideNotice(element) {
+      element.textContent = '';
+      element.style.display = 'none';
     }
 
-    // رفض وحذف طلب معلق
-    function rejectItem(index) {
-        if(confirm("هل أنت متأكد من رفض وحذف هذه البيانات؟")) {
-            let pendingList = JSON.parse(localStorage.getItem('pendingCitizens')) || [];
-            pendingList.splice(index, 1);
-            localStorage.setItem('pendingCitizens', JSON.stringify(pendingList));
-            loadAdminData();
-        }
+    function safeText(value) {
+      return value === null || value === undefined || value === '' ? '—' : String(value);
     }
 
-    // تعديل بيانات أسرة في الكشف النهائي
-    function editApprovedItem(index) {
-        let approvedList = JSON.parse(localStorage.getItem('approvedCitizens')) || [];
-        let item = approvedList[index];
-
-        let newHeadName = prompt("تعديل اسم رب الأسرة:", item.headName);
-        if (newHeadName === null) return; // إلغاء
-
-        let newPhone = prompt("تعديل رقم الهاتف:", item.phone);
-        if (newPhone === null) return;
-
-        let newNeeds = prompt("تعديل الاحتياجات:", item.needs);
-        if (newNeeds === null) return;
-
-        // تحديث البيانات
-        item.headName = newHeadName.trim() !== "" ? newHeadName : item.headName;
-        item.phone = newPhone.trim() !== "" ? newPhone : item.phone;
-        item.needs = newNeeds.trim() !== "" ? newNeeds : item.needs;
-
-        localStorage.setItem('approvedCitizens', JSON.stringify(approvedList));
-        loadAdminData();
-        alert("تم تحديث بيانات الأسرة بنجاح!");
+    function makeCell(value) {
+      const td = document.createElement('td');
+      td.textContent = safeText(value);
+      return td;
     }
 
-    // حذف أسرة من الكشف النهائي
-    function deleteApprovedItem(index) {
-        if(confirm("هل أنت متأكد من حذف هذه الأسرة نهائياً من الكشف النهائي؟")) {
-            let approvedList = JSON.parse(localStorage.getItem('approvedCitizens')) || [];
-            approvedList.splice(index, 1);
-            localStorage.setItem('approvedCitizens', JSON.stringify(approvedList));
-            loadAdminData();
-        }
+    function makeActionButton(label, className, handler) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = label;
+      button.className = className;
+      button.addEventListener('click', handler);
+      return button;
     }
 
-    // تحميل الكشف المعتمد بصيغة Excel/CSV
-    function downloadApprovedCSV() {
-        let approvedList = JSON.parse(localStorage.getItem('approvedCitizens')) || [];
-        if (approvedList.length === 0) {
-            alert("عذراً، لا توجد أي أسر معتمدة في الكشف النهائي حالياً للتحميل!");
-            return;
-        }
+    async function checkAdmin(user) {
+      const { data, error } = await supabaseClient
+        .from('admin_users')
+        .select('user_id')
+        .eq('user_id', user.id)
+        .maybeSingle();
 
-        let csvContent = "\uFEFF"; 
-        csvContent += "اسم رب الأسرة,اسم الزوجة,نوع الهوية,رقم الهوية,الحالة الاجتماعية,المهنة,عدد الذكور,عدد الإناث,رقم الهاتف,المحافظة,العزلة,القرية,الحالة الصحية والمرض,احتياجات الأسرة,متضررة من الحرب,نوع الضرر,وضع الأسرة المادي\n";
+      if (error) throw error;
+      return Boolean(data);
+    }
 
-        approvedList.forEach(item => {
-            let row = [
-                `"${item.headName || ''}"`,
-                `"${item.spouseName || ''}"`,
-                `"${item.idType || ''}"`,
-                `"${item.idNumber || ''}"`,
-                `"${item.socialStatus || ''}"`,
-                `"${item.occupation || ''}"`,
-                item.malesCount || 0,
-                item.femalesCount || 0,
-                `"${item.phone || ''}"`,
-                `"${item.governorate || ''}"`,
-                `"${item.district || ''}"`,
-                `"${item.village || ''}"`,
-                `"${item.healthStatus || ''}"`,
-                `"${item.needs || ''}"`,
-                `"${item.warAffected || ''}"`,
-                `"${item.damageType || ''}"`,
-                `"${item.economicStatus || ''}"`
-            ];
-            csvContent += row.join(",") + "\n";
+    async function enterDashboard(user) {
+      const isAdmin = await checkAdmin(user);
+
+      if (!isAdmin) {
+        await supabaseClient.auth.signOut();
+        throw new Error('هذا الحساب غير مضاف ضمن المشرفين المصرح لهم.');
+      }
+
+      loginSection.classList.add('hidden');
+      dashboard.classList.remove('hidden');
+      hideNotice(loginError);
+      await loadAdminData();
+    }
+
+    async function loadAdminData() {
+      hideNotice(dashboardError);
+      pendingBody.replaceChildren();
+      approvedBody.replaceChildren();
+
+      const [pendingResult, approvedResult] = await Promise.all([
+        supabaseClient.from('families').select('*').eq('status','pending').order('created_at',{ascending:false}),
+        supabaseClient.from('families').select('*').eq('status','approved').order('created_at',{ascending:false})
+      ]);
+
+      if (pendingResult.error) throw pendingResult.error;
+      if (approvedResult.error) throw approvedResult.error;
+
+      pendingRows = pendingResult.data || [];
+      approvedRows = approvedResult.data || [];
+
+      renderRows(pendingRows, pendingBody, 'pending');
+      renderRows(approvedRows, approvedBody, 'approved');
+
+      showNotice(dashboardInfo, `تم تحميل ${pendingRows.length} طلب قيد المراجعة و${approvedRows.length} أسرة معتمدة.`);
+      setTimeout(() => hideNotice(dashboardInfo), 5000);
+    }
+
+    function renderRows(rows, tbody, type) {
+      tbody.replaceChildren();
+
+      if (!rows.length) {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = 21;
+        td.className = 'empty';
+        td.textContent = 'لا توجد سجلات في هذا القسم حالياً.';
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+        return;
+      }
+
+      rows.forEach((record) => {
+        const tr = document.createElement('tr');
+
+        columns.forEach(([key]) => {
+          tr.appendChild(makeCell(record[key]));
         });
 
-        let encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
-        let link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "approved_families_registry.csv");
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        const actions = document.createElement('td');
+        actions.className = 'actions';
+
+        if (type === 'pending') {
+          actions.appendChild(makeActionButton('اعتماد', 'approve', () => changeStatus(record.id, 'approved')));
+          actions.appendChild(makeActionButton('رفض', 'reject', () => changeStatus(record.id, 'rejected')));
+          actions.appendChild(makeActionButton('تعديل', 'edit', () => editRecord(record)));
+        } else {
+          actions.appendChild(makeActionButton('تعديل', 'edit', () => editRecord(record)));
+          actions.appendChild(makeActionButton('حذف', 'delete', () => deleteRecord(record.id)));
+        }
+
+        tr.appendChild(actions);
+        tbody.appendChild(tr);
+      });
     }
 
-    window.onload = loadAdminData;
-</script>
+    async function changeStatus(id, status) {
+      const actionName = status === 'approved' ? 'اعتماد' : 'رفض';
 
+      if (!confirm(`هل أنت متأكد من ${actionName} هذا الطلب؟`)) return;
+
+      try {
+        const { error } = await supabaseClient
+          .from('families')
+          .update({status})
+          .eq('id', id);
+
+        if (error) throw error;
+        await loadAdminData();
+
+      } catch (error) {
+        console.error(error);
+        showNotice(dashboardError, 'تعذر تحديث حالة الطلب. تحقق من صلاحيات المشرف والاتصال.');
+      }
+    }
+
+    async function editRecord(record) {
+      const updated = {};
+
+      const fields = [
+        ['head_name','اسم رب الأسرة'],
+        ['phone','رقم الهاتف'],
+        ['needs','الاحتياجات'],
+        ['alternate_recipient_name','اسم المستلم البديل'],
+        ['alternate_recipient_id_number','رقم هوية المستلم البديل'],
+        ['alternate_recipient_phone','هاتف المستلم البديل']
+      ];
+
+      for (const [key, label] of fields) {
+        const answer = prompt(`تعديل ${label}:`, record[key] || '');
+        if (answer === null) return;
+        updated[key] = answer.trim() || null;
+      }
+
+      try {
+        const { error } = await supabaseClient
+          .from('families')
+          .update(updated)
+          .eq('id', record.id);
+
+        if (error) throw error;
+        await loadAdminData();
+
+      } catch (error) {
+        console.error(error);
+        showNotice(dashboardError, 'تعذر حفظ التعديلات. تحقق من الاتصال والصلاحيات.');
+      }
+    }
+
+    async function deleteRecord(id) {
+      if (!confirm('هل تريد حذف هذا السجل نهائياً؟ لا يمكن التراجع عن الحذف.')) return;
+
+      try {
+        const { error } = await supabaseClient
+          .from('families')
+          .delete()
+          .eq('id', id);
+
+        if (error) throw error;
+        await loadAdminData();
+
+      } catch (error) {
+        console.error(error);
+        showNotice(dashboardError, 'تعذر حذف السجل. تحقق من الاتصال والصلاحيات.');
+      }
+    }
+
+    function csvSafe(value) {
+      let text = value === null || value === undefined ? '' : String(value);
+
+      // منع تفسير القيم التي تبدأ بصيغ Excel على أنها معادلات.
+      if (/^[\s\u0000-\u001f]*[=+\-@]/.test(text)) {
+        text = "'" + text;
+      }
+
+      return '"' + text.replace(/"/g, '""') + '"';
+    }
+
+    function downloadCSV() {
+      if (!approvedRows.length) {
+        showNotice(dashboardError, 'لا توجد أسر معتمدة لتنزيلها حالياً.');
+        return;
+      }
+
+      const headers = columns.map(([, label]) => label);
+      const lines = [headers.map(csvSafe).join(',')];
+
+      approvedRows.forEach(row => {
+        lines.push(columns.map(([key]) => csvSafe(row[key])).join(','));
+      });
+
+      const blob = new Blob(['\uFEFF' + lines.join('\r\n')], {
+        type:'text/csv;charset=utf-8;'
+      });
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+
+      link.href = url;
+      link.download = 'approved-families.csv';
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      URL.revokeObjectURL(url);
+    }
+
+    loginForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      hideNotice(loginError);
+
+      loginBtn.disabled = true;
+      loginBtn.textContent = 'جارٍ التحقق...';
+
+      try {
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+          email,
+          password
+        });
+
+        if (error) throw error;
+
+        await enterDashboard(data.user);
+
+      } catch (error) {
+        console.error('Admin sign-in failed:', error);
+
+        showNotice(
+          loginError,
+          error.message === 'Invalid login credentials'
+            ? 'البريد الإلكتروني أو كلمة المرور غير صحيحة.'
+            : (error.message || 'تعذر تسجيل الدخول. تحقق من بيانات الحساب وإعدادات Supabase.')
+        );
+
+      } finally {
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'دخول';
+      }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await supabaseClient.auth.signOut();
+      dashboard.classList.add('hidden');
+      loginSection.classList.remove('hidden');
+      loginForm.reset();
+    });
+
+    document.getElementById('refreshBtn').addEventListener('click', async () => {
+      try {
+        await loadAdminData();
+      } catch (error) {
+        console.error(error);
+        showNotice(dashboardError, 'تعذر تحديث البيانات. تحقق من اتصال الإنترنت.');
+      }
+    });
+
+    document.getElementById('downloadBtn').addEventListener('click', downloadCSV);
+
+    (async function initialize() {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+
+      if (!session) return;
+
+      try {
+        await enterDashboard(session.user);
+      } catch (error) {
+        console.error(error);
+        showNotice(loginError, error.message || 'لا يمكن التحقق من صلاحية هذا الحساب كمشرف.');
+        loginSection.classList.remove('hidden');
+        dashboard.classList.add('hidden');
+      }
+    })();
+  </script>
 </body>
 </html>
