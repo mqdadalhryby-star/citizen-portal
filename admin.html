@@ -71,6 +71,29 @@
             font-size: 12px;
         }
         .btn-reject:hover { background-color: #c82333; }
+        .btn-edit {
+            background-color: #ffc107;
+            color: #333;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        .btn-edit:hover { background-color: #e0a800; }
+        .btn-delete-approved {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .btn-delete-approved:hover { background-color: #c82333; }
         .btn-download {
             background-color: #17a2b8;
             color: white;
@@ -82,7 +105,6 @@
             font-weight: bold;
         }
         .btn-download:hover { background-color: #138496; }
-        .badge-approved { color: #155724; background-color: #d4edda; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -133,7 +155,7 @@
                 <th>الاحتياجات</th>
                 <th>الضرر من الحرب</th>
                 <th>الوضع المادي</th>
-                <th>الحالة</th>
+                <th>إجراءات الكشف النهائي</th>
             </tr>
         </thead>
         <tbody id="approvedTable">
@@ -153,6 +175,7 @@
         let pendingList = JSON.parse(localStorage.getItem('pendingCitizens')) || [];
         let approvedList = JSON.parse(localStorage.getItem('approvedCitizens')) || [];
 
+        // تعبئة الطلبات المعلقة
         if (pendingList.length === 0) {
             pendingBody.innerHTML = `<tr><td colspan="13" style="padding: 15px; color: #777;">لا توجد طلبات جديدة بانتظار المراجعة.</td></tr>`;
         } else {
@@ -178,10 +201,11 @@
             });
         }
 
+        // تعبئة الكشف النهائي مع أزرار التعديل والحذف
         if (approvedList.length === 0) {
             approvedBody.innerHTML = `<tr><td colspan="13" style="padding: 15px; color: #777;">لم يتم اعتماد أي أسرة في الكشف النهائي حتى الآن.</td></tr>`;
         } else {
-            approvedList.forEach((item) => {
+            approvedList.forEach((item, index) => {
                 approvedBody.innerHTML += `<tr>
                     <td>${item.headName || '-'}</td>
                     <td>${item.spouseName || '-'}</td>
@@ -195,12 +219,16 @@
                     <td>${item.needs || '-'}</td>
                     <td>${item.warAffected || '-'} (${item.damageType || 'لا يوجد'})</td>
                     <td>${item.economicStatus || '-'}</td>
-                    <td><span class="badge-approved">معتمد</span></td>
+                    <td>
+                        <button class="btn-edit" onclick="editApprovedItem(${index})">✏️ تعديل</button><br>
+                        <button class="btn-delete-approved" onclick="deleteApprovedItem(${index})">❌ حذف</button>
+                    </td>
                 </tr>`;
             });
         }
     }
 
+    // نقل الطلب من المعلق إلى المعتمد
     function approveItem(index) {
         let pendingList = JSON.parse(localStorage.getItem('pendingCitizens')) || [];
         let approvedList = JSON.parse(localStorage.getItem('approvedCitizens')) || [];
@@ -214,6 +242,7 @@
         loadAdminData();
     }
 
+    // رفض وحذف طلب معلق
     function rejectItem(index) {
         if(confirm("هل أنت متأكد من رفض وحذف هذه البيانات؟")) {
             let pendingList = JSON.parse(localStorage.getItem('pendingCitizens')) || [];
@@ -223,6 +252,41 @@
         }
     }
 
+    // تعديل بيانات أسرة في الكشف النهائي
+    function editApprovedItem(index) {
+        let approvedList = JSON.parse(localStorage.getItem('approvedCitizens')) || [];
+        let item = approvedList[index];
+
+        let newHeadName = prompt("تعديل اسم رب الأسرة:", item.headName);
+        if (newHeadName === null) return; // إلغاء
+
+        let newPhone = prompt("تعديل رقم الهاتف:", item.phone);
+        if (newPhone === null) return;
+
+        let newNeeds = prompt("تعديل الاحتياجات:", item.needs);
+        if (newNeeds === null) return;
+
+        // تحديث البيانات
+        item.headName = newHeadName.trim() !== "" ? newHeadName : item.headName;
+        item.phone = newPhone.trim() !== "" ? newPhone : item.phone;
+        item.needs = newNeeds.trim() !== "" ? newNeeds : item.needs;
+
+        localStorage.setItem('approvedCitizens', JSON.stringify(approvedList));
+        loadAdminData();
+        alert("تم تحديث بيانات الأسرة بنجاح!");
+    }
+
+    // حذف أسرة من الكشف النهائي
+    function deleteApprovedItem(index) {
+        if(confirm("هل أنت متأكد من حذف هذه الأسرة نهائياً من الكشف النهائي؟")) {
+            let approvedList = JSON.parse(localStorage.getItem('approvedCitizens')) || [];
+            approvedList.splice(index, 1);
+            localStorage.setItem('approvedCitizens', JSON.stringify(approvedList));
+            loadAdminData();
+        }
+    }
+
+    // تحميل الكشف المعتمد بصيغة Excel/CSV
     function downloadApprovedCSV() {
         let approvedList = JSON.parse(localStorage.getItem('approvedCitizens')) || [];
         if (approvedList.length === 0) {
