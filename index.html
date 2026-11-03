@@ -1,580 +1,134 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#1769aa">
-  <title>استمارة تسجيل بيانات الأسر | البوابة المجتمعية</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: Tahoma, Arial, sans-serif;
-      background: #f4f6f9;
-      margin: 0;
-      padding: 20px;
-      color: #263238;
-    }
-
-    .container {
-      max-width: 760px;
-      margin: 25px auto;
-      background: #fff;
-      padding: 28px;
-      border-radius: 12px;
-      box-shadow: 0 4px 18px rgba(0,0,0,.08);
-    }
-
-    h1 {
-      font-size: 23px;
-      text-align: center;
-      color: #1769aa;
-      margin: 0 0 8px;
-    }
-
-    .intro {
-      text-align: center;
-      color: #687782;
-      line-height: 1.8;
-      margin: 0 0 24px;
-      font-size: 14px;
-    }
-
-    h2 {
-      font-size: 17px;
-      color: #1769aa;
-      border-bottom: 1px solid #e6edf3;
-      padding-bottom: 9px;
-      margin: 26px 0 16px;
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-      flex: 1;
-      min-width: 220px;
-    }
-
-    .row {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 7px;
-      font-weight: bold;
-      font-size: 14px;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      padding: 11px 12px;
-      border: 1px solid #ccd5dd;
-      border-radius: 7px;
-      font: inherit;
-      font-size: 14px;
-      background: #fff;
-    }
-
-    input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: #2684c7;
-      box-shadow: 0 0 0 3px rgba(38,132,199,.12);
-    }
-
-    textarea {
-      min-height: 82px;
-      resize: vertical;
-    }
-
-    .hint {
-      font-size: 12px;
-      color: #75828c;
-      margin-top: 5px;
-    }
-
-    .btn-submit {
-      width: 100%;
-      border: 0;
-      border-radius: 8px;
-      padding: 13px;
-      background: #28a745;
-      color: white;
-      font: inherit;
-      font-weight: bold;
-      font-size: 16px;
-      cursor: pointer;
-      margin-top: 8px;
-    }
-
-    .btn-submit:disabled {
-      opacity: .65;
-      cursor: wait;
-    }
-
-    .message {
-      display: none;
-      padding: 12px 14px;
-      border-radius: 7px;
-      margin: 16px 0;
-      line-height: 1.7;
-      font-size: 14px;
-    }
-
-    .success {
-      background: #e8f6ec;
-      color: #176b31;
-      border: 1px solid #bce4c7;
-    }
-
-    .error {
-      background: #fff0f0;
-      color: #a32323;
-      border: 1px solid #f0c3c3;
-    }
-
-    .required {
-      color: #c62828;
-    }
-
-    @media(max-width:560px) {
-      body {
-        padding: 10px;
-      }
-
-      .container {
-        padding: 18px 14px;
-        margin: 10px auto;
-      }
-
-      .form-group {
-        min-width: 100%;
-      }
-
-      h1 {
-        font-size: 20px;
-      }
-    }
-  </style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1769aa">
+<title>استمارة تسجيل بيانات الأسر | البوابة المجتمعية</title>
+<style>
+*{box-sizing:border-box}body{font-family:Tahoma,Arial,sans-serif;background:#f4f6f9;margin:0;padding:20px;color:#263238}
+.container{max-width:760px;margin:25px auto;background:#fff;padding:28px;border-radius:12px;box-shadow:0 4px 18px rgba(0,0,0,.08)}
+h1{font-size:23px;text-align:center;color:#1769aa;margin:0 0 8px}.intro{text-align:center;color:#687782;line-height:1.8;margin:0 0 24px;font-size:14px}
+h2{font-size:17px;color:#1769aa;border-bottom:1px solid #e6edf3;padding-bottom:9px;margin:26px 0 16px}
+.form-group{margin-bottom:15px;flex:1;min-width:220px}.row{display:flex;gap:14px;flex-wrap:wrap}
+label{display:block;margin-bottom:7px;font-weight:bold;font-size:14px}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid #ccd5dd;border-radius:7px;font:inherit;font-size:14px;background:#fff}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#2684c7;box-shadow:0 0 0 3px rgba(38,132,199,.12)}
+textarea{min-height:82px;resize:vertical}.hint{font-size:12px;color:#75828c;margin-top:5px}
+.btn-submit{width:100%;border:0;border-radius:8px;padding:13px;background:#28a745;color:white;font:inherit;font-weight:bold;font-size:16px;cursor:pointer;margin-top:8px}
+.btn-submit:disabled{opacity:.65;cursor:wait}.message{display:none;padding:12px 14px;border-radius:7px;margin:16px 0;line-height:1.7;font-size:14px}
+.success{background:#e8f6ec;color:#176b31;border:1px solid #bce4c7}.error{background:#fff0f0;color:#a32323;border:1px solid #f0c3c3}
+.required{color:#c62828}.hidden{display:none!important}
+@media(max-width:560px){body{padding:10px}.container{padding:18px 14px;margin:10px auto}.form-group{min-width:100%}h1{font-size:20px}}
+</style>
 </head>
-
 <body>
-
-  <main class="container">
-
-    <h1>استمارة تسجيل بيانات الأسر</h1>
-
-    <p class="intro">
-      البوابة المجتمعية لتسجيل بيانات الأسر ومراجعة الطلبات.
-      يرجى إدخال المعلومات بدقة.
-    </p>
-
-    <div id="successMsg" class="message success"
-         role="status" aria-live="polite"></div>
-
-    <div id="errorMsg" class="message error"
-         role="alert" aria-live="assertive"></div>
-
-    <form id="familyForm">
-
-      <h2>أولاً: البيانات الأساسية</h2>
-
-      <div class="row">
-
-        <div class="form-group">
-          <label for="headName">
-            اسم رب الأسرة <span class="required">*</span>
-          </label>
-          <input id="headName" name="headName"
-                 maxlength="150" required>
-        </div>
-
-        <div class="form-group">
-          <label for="spouseName">اسم الزوجة / الزوج</label>
-          <input id="spouseName" name="spouseName"
-                 maxlength="150">
-        </div>
-
-      </div>
-
-      <div class="row">
-
-        <div class="form-group">
-          <label for="idType">نوع الهوية</label>
-          <select id="idType" name="idType">
-            <option value="">اختر نوع الهوية</option>
-            <option>بطاقة شخصية</option>
-            <option>بطاقة عائلية</option>
-            <option>جواز سفر</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="idNumber">
-            رقم الهوية <span class="required">*</span>
-          </label>
-          <input id="idNumber" name="idNumber"
-                 maxlength="80" required>
-        </div>
-
-      </div>
-
-      <div class="row">
-
-        <div class="form-group">
-          <label for="socialStatus">الحالة الاجتماعية</label>
-          <select id="socialStatus" name="socialStatus">
-            <option value="">اختر الحالة</option>
-            <option>متزوج/ة</option>
-            <option>أرمل/ة</option>
-            <option>مطلق/ة</option>
-            <option>أعزب/عزباء</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="occupation">المهنة</label>
-          <input id="occupation" name="occupation"
-                 maxlength="120">
-        </div>
-
-      </div>
-
-      <div class="row">
-
-        <div class="form-group">
-          <label for="malesCount">عدد الذكور</label>
-          <input id="malesCount" name="malesCount"
-                 type="number" min="0" max="100" value="0">
-        </div>
-
-        <div class="form-group">
-          <label for="femalesCount">عدد الإناث</label>
-          <input id="femalesCount" name="femalesCount"
-                 type="number" min="0" max="100" value="0">
-        </div>
-
-      </div>
-
-      <div class="form-group">
-        <label for="phone">
-          رقم الهاتف <span class="required">*</span>
-        </label>
-        <input id="phone" name="phone"
-               type="tel" maxlength="30" required>
-      </div>
-
-
-      <h2>ثانياً: بيانات المستلم البديل (إن وجد)</h2>
-
-      <div class="row">
-
-        <div class="form-group">
-          <label for="alternateRecipientName">
-            اسم المستلم البديل
-          </label>
-          <input id="alternateRecipientName"
-                 name="alternateRecipientName"
-                 maxlength="150">
-        </div>
-
-        <div class="form-group">
-          <label for="alternateRecipientIdNumber">
-            رقم البطاقة للمستلم البديل
-          </label>
-          <input id="alternateRecipientIdNumber"
-                 name="alternateRecipientIdNumber"
-                 maxlength="80">
-        </div>
-
-      </div>
-
-      <div class="form-group">
-        <label for="alternateRecipientPhone">
-          رقم الهاتف للمستلم البديل
-        </label>
-        <input id="alternateRecipientPhone"
-               name="alternateRecipientPhone"
-               type="tel" maxlength="30">
-      </div>
-
-
-      <h2>ثالثاً: محل الإقامة</h2>
-
-      <div class="row">
-
-        <div class="form-group">
-          <label for="governorate">
-            المحافظة <span class="required">*</span>
-          </label>
-          <input id="governorate" name="governorate"
-                 maxlength="100" required>
-        </div>
-
-        <div class="form-group">
-          <label for="district">
-            المديرية <span class="required">*</span>
-          </label>
-          <input id="district" name="district"
-                 maxlength="100" required>
-        </div>
-
-      </div>
-
-      <div class="form-group">
-        <label for="village">
-          القرية / الحي <span class="required">*</span>
-        </label>
-        <input id="village" name="village"
-               maxlength="150" required>
-      </div>
-
-
-      <h2>رابعاً: الحالة والاحتياجات</h2>
-
-      <div class="form-group">
-        <label for="healthStatus">
-          الحالة الصحية / المرض
-        </label>
-        <textarea id="healthStatus" name="healthStatus"
-                  maxlength="1500"></textarea>
-      </div>
-
-      <div class="form-group">
-        <label for="needs">الاحتياجات</label>
-        <textarea id="needs" name="needs"
-                  maxlength="1500"></textarea>
-      </div>
-
-      <div class="row">
-
-        <div class="form-group">
-          <label for="warAffected">
-            هل الأسرة متضررة من الحرب؟
-          </label>
-          <select id="warAffected" name="warAffected">
-            <option value="">اختر</option>
-            <option value="لا">لا</option>
-            <option value="نعم">نعم</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="damageType">نوع الضرر</label>
-          <input id="damageType" name="damageType"
-                 maxlength="250">
-        </div>
-
-      </div>
-
-      <div class="form-group">
-        <label for="economicStatus">الوضع المادي</label>
-        <select id="economicStatus" name="economicStatus">
-          <option value="">اختر الوضع المادي</option>
-          <option>بدون أي دخل</option>
-          <option>دخل محدود جداً ومتقطع</option>
-          <option>يعتمد على المساعدات الإنسانية</option>
-        </select>
-      </div>
-
-      <button id="submitBtn" class="btn-submit" type="submit">
-        إرسال طلب التسجيل
-      </button>
-
-      <p class="hint">
-        سيتم إرسال الطلب للمراجعة، ولا يعني الإرسال اعتماد الأسرة
-        أو استحقاقها للمساعدة.
-      </p>
-
-    </form>
-  </main>
-
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <script>
-
-    // بيانات الاتصال بمشروع Supabase
-    // لا تضع service_role أو أي مفتاح سري في هذا الملف.
-
-    const SUPABASE_URL =
-      'https://iwiakxpsuxzsujdsrehs.supabase.co';
-
-    const SUPABASE_PUBLISHABLE_KEY =
-      'sb_publishable_qI-wgJeZFL4FnCZzuPkSkQ_3cSoyaSu';
-
-    const supabaseClient = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_PUBLISHABLE_KEY
-    );
-
-
-    const form = document.getElementById('familyForm');
-    const submitBtn = document.getElementById('submitBtn');
-
-    const successMsg = document.getElementById('successMsg');
-    const errorMsg = document.getElementById('errorMsg');
-
-
-    function showMessage(element, message) {
-
-      successMsg.style.display = 'none';
-      errorMsg.style.display = 'none';
-
-      element.textContent = message;
-      element.style.display = 'block';
-
-    }
-
-
-    function valueOf(id) {
-
-      return document.getElementById(id).value.trim();
-
-    }
-
-
-    form.addEventListener('submit', async (event) => {
-
-      event.preventDefault();
-
-      successMsg.style.display = 'none';
-      errorMsg.style.display = 'none';
-
-
-      const males = Number(valueOf('malesCount') || 0);
-      const females = Number(valueOf('femalesCount') || 0);
-
-
-      if (
-        !Number.isInteger(males) ||
-        !Number.isInteger(females) ||
-        males < 0 ||
-        females < 0 ||
-        males > 100 ||
-        females > 100
-      ) {
-
-        showMessage(
-          errorMsg,
-          'يرجى التأكد من إدخال أعداد صحيحة للأفراد.'
-        );
-
-        return;
-
-      }
-
-
-      // تجهيز البيانات وإرسالها بأسماء الأعمدة الموجودة في قاعدة البيانات
-
-      const family = {
-
-        head_name: valueOf('headName'),
-
-        spouse_name: valueOf('spouseName') || null,
-
-        id_type: valueOf('idType') || null,
-
-        id_number: valueOf('idNumber'),
-
-        social_status: valueOf('socialStatus') || null,
-
-        occupation: valueOf('occupation') || null,
-
-        males_count: males,
-
-        females_count: females,
-
-        phone: valueOf('phone'),
-
-        alternate_recipient_name:
-          valueOf('alternateRecipientName') || null,
-
-        alternate_recipient_id_number:
-          valueOf('alternateRecipientIdNumber') || null,
-
-        alternate_recipient_phone:
-          valueOf('alternateRecipientPhone') || null,
-
-        governorate: valueOf('governorate'),
-
-        district: valueOf('district'),
-
-        village: valueOf('village'),
-
-        health_status: valueOf('healthStatus') || null,
-
-        needs: valueOf('needs') || null,
-
-        war_affected: valueOf('warAffected') || null,
-
-        damage_type: valueOf('damageType') || null,
-
-        economic_status: valueOf('economicStatus') || null,
-
-        status: 'pending'
-
-      };
-
-
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'جارٍ إرسال الطلب...';
-
-
-      try {
-
-        const { error } = await supabaseClient
-          .from('families')
-          .insert([family]);
-
-
-        if (error) {
-          throw error;
-        }
-
-
-        form.reset();
-
-        document.getElementById('malesCount').value = '0';
-        document.getElementById('femalesCount').value = '0';
-
-
-        showMessage(
-          successMsg,
-          'تم إرسال طلبك بنجاح إلى قاعدة البيانات. سيظهر لدى الإدارة للمراجعة.'
-        );
-
-
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
-
-
-      } catch (error) {
-
-        console.error('Family submission failed:', error);
-
-        showMessage(
-          errorMsg,
-          'تعذر إرسال الطلب حالياً. تحقق من اتصال الإنترنت ثم حاول مرة أخرى. إذا تكررت المشكلة، تواصل مع الإدارة.'
-        );
-
-      } finally {
-
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'إرسال طلب التسجيل';
-
-      }
-
-    });
-
-  </script>
-
-</body>
-</html>
+<main class="container">
+<h1>استمارة تسجيل بيانات الأسر</h1>
+<p class="intro">البوابة المجتمعية لتسجيل بيانات الأسر ومراجعة الطلبات. يرجى إدخال المعلومات بدقة.</p>
+<div id="successMsg" class="message success" role="status" aria-live="polite"></div>
+<div id="errorMsg" class="message error" role="alert" aria-live="assertive"></div>
+<form id="familyForm">
+<h2>أولاً: البيانات الأساسية</h2>
+<div class="row">
+<div class="form-group"><label for="headName">اسم رب الأسرة <span class="required">*</span></label><input id="headName" name="headName" maxlength="150" required></div>
+<div class="form-group">
+<label for="familyType">نوع الأسرة <span class="required">*</span></label>
+<select id="familyType" name="familyType" required>
+<option value="">اختر نوع الأسرة</option><option value="فقير">فقير</option><option value="نازح">نازح</option><option value="عائدة">عائدة</option><option value="مهمشين">مهمشين</option><option value="أيتام">أيتام</option><option value="معاقين">معاقين</option><option value="أخرى">أخرى</option>
+</select></div></div>
+<div class="form-group hidden" id="familyTypeOtherGroup">
+<label for="familyTypeOther">يرجى تحديد نوع الأسرة <span class="required">*</span></label>
+<input id="familyTypeOther" name="familyTypeOther" maxlength="150" placeholder="اكتب نوع الأسرة">
+</div>
+<div class="form-group"><label for="spouseName">اسم الزوجة / الزوج</label><input id="spouseName" name="spouseName" maxlength="150"></div>
+<div class="row">
+<div class="form-group"><label for="idType">نوع الهوية</label><select id="idType" name="idType">
+<option value="">اختر نوع الهوية</option><option value="بطاقة شخصية">بطاقة شخصية</option><option value="جواز سفر">جواز سفر</option><option value="رقم جلوس">رقم جلوس</option><option value="بطاقة انتخابية">بطاقة انتخابية</option>
+</select></div>
+<div class="form-group"><label for="idNumber">رقم الهوية <span class="required">*</span></label><input id="idNumber" name="idNumber" maxlength="80" required></div>
+</div>
+<div class="row">
+<div class="form-group"><label for="socialStatus">الحالة الاجتماعية</label><select id="socialStatus" name="socialStatus"><option value="">اختر الحالة</option><option>متزوج/ة</option><option>أرمل/ة</option><option>مطلق/ة</option><option>أعزب/عزباء</option></select></div>
+<div class="form-group"><label for="occupation">المهنة</label><input id="occupation" name="occupation" maxlength="120"></div>
+</div>
+<div class="row">
+<div class="form-group"><label for="malesCount">عدد الذكور</label><input id="malesCount" name="malesCount" type="number" min="0" max="100" value="0"></div>
+<div class="form-group"><label for="femalesCount">عدد الإناث</label><input id="femalesCount" name="femalesCount" type="number" min="0" max="100" value="0"></div>
+</div>
+<div class="form-group"><label for="phone">رقم الهاتف <span class="required">*</span></label><input id="phone" name="phone" type="tel" maxlength="30" required></div>
+<h2>ثانياً: بيانات المستلم البديل (إن وجد)</h2>
+<div class="row">
+<div class="form-group"><label for="alternateRecipientName">اسم المستلم البديل</label><input id="alternateRecipientName" name="alternateRecipientName" maxlength="150"></div>
+<div class="form-group"><label for="alternateRecipientIdNumber">رقم البطاقة للمستلم البديل</label><input id="alternateRecipientIdNumber" name="alternateRecipientIdNumber" maxlength="80"></div>
+</div>
+<div class="form-group"><label for="alternateRecipientPhone">رقم الهاتف للمستلم البديل</label><input id="alternateRecipientPhone" name="alternateRecipientPhone" type="tel" maxlength="30"></div>
+<h2>ثالثاً: محل الإقامة</h2>
+<div class="row">
+<div class="form-group"><label for="governorate">المحافظة <span class="required">*</span></label><input id="governorate" name="governorate" maxlength="100" required></div>
+<div class="form-group"><label for="district">المديرية <span class="required">*</span></label><input id="district" name="district" maxlength="100" required></div>
+</div>
+<div class="form-group"><label for="village">القرية / الحي <span class="required">*</span></label><input id="village" name="village" maxlength="150" required></div>
+<h2>رابعاً: الحالة والاحتياجات</h2>
+<div class="form-group"><label for="healthStatus">الحالة الصحية / المرض</label><textarea id="healthStatus" name="healthStatus" maxlength="1500"></textarea></div>
+<div class="form-group"><label for="needs">الاحتياجات</label><textarea id="needs" name="needs" maxlength="1500"></textarea></div>
+<div class="row">
+<div class="form-group"><label for="warAffected">هل الأسرة متضررة من الحرب؟</label><select id="warAffected" name="warAffected"><option value="">اختر</option><option value="لا">لا</option><option value="نعم">نعم</option></select></div>
+<div class="form-group"><label for="damageType">نوع الضرر</label><input id="damageType" name="damageType" maxlength="250"></div>
+</div>
+<div class="form-group"><label for="economicStatus">الوضع المادي</label><select id="economicStatus" name="economicStatus"><option value="">اختر الوضع المادي</option><option>بدون أي دخل</option><option>دخل محدود جداً ومتقطع</option><option>يعتمد على المساعدات الإنسانية</option></select></div>
+<button id="submitBtn" class="btn-submit" type="submit">إرسال طلب التسجيل</button>
+<p class="hint">سيتم إرسال الطلب للمراجعة، ولا يعني الإرسال اعتماد الأسرة أو استحقاقها للمساعدة.</p>
+</form></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL='https://iwiakxpsuxzsujdsrehs.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_qI-wgJeZFL4FnCZzuPkSkQ_3cSoyaSu';
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+const form=document.getElementById('familyForm'),submitBtn=document.getElementById('submitBtn');
+const successMsg=document.getElementById('successMsg'),errorMsg=document.getElementById('errorMsg');
+const familyTypeSelect=document.getElementById('familyType'),familyTypeOtherGroup=document.getElementById('familyTypeOtherGroup');
+const familyTypeOtherInput=document.getElementById('familyTypeOther');
+function showMessage(element,message){successMsg.style.display='none';errorMsg.style.display='none';element.textContent=message;element.style.display='block'}
+function valueOf(id){return document.getElementById(id).value.trim()}
+function updateFamilyTypeOther(){
+ const isOther=familyTypeSelect.value==='أخرى';
+ familyTypeOtherGroup.classList.toggle('hidden',!isOther);
+ familyTypeOtherInput.required=isOther;
+ if(!isOther)familyTypeOtherInput.value='';
+}
+familyTypeSelect.addEventListener('change',updateFamilyTypeOther);
+form.addEventListener('submit',async event=>{
+ event.preventDefault();successMsg.style.display='none';errorMsg.style.display='none';updateFamilyTypeOther();
+ if(!form.reportValidity())return;
+ const males=Number(valueOf('malesCount')||0),females=Number(valueOf('femalesCount')||0);
+ if(!Number.isInteger(males)||!Number.isInteger(females)||males<0||females<0||males>100||females>100){
+  showMessage(errorMsg,'يرجى التأكد من إدخال أعداد صحيحة للأفراد.');return;
+ }
+ const family={
+  head_name:valueOf('headName'),
+  family_type:valueOf('familyType'),
+  family_type_other:valueOf('familyType')==='أخرى'?(valueOf('familyTypeOther')||null):null,
+  spouse_name:valueOf('spouseName')||null,id_type:valueOf('idType')||null,id_number:valueOf('idNumber'),
+  social_status:valueOf('socialStatus')||null,occupation:valueOf('occupation')||null,
+  males_count:males,females_count:females,phone:valueOf('phone'),
+  alternate_recipient_name:valueOf('alternateRecipientName')||null,
+  alternate_recipient_id_number:valueOf('alternateRecipientIdNumber')||null,
+  alternate_recipient_phone:valueOf('alternateRecipientPhone')||null,
+  governorate:valueOf('governorate'),district:valueOf('district'),village:valueOf('village'),
+  health_status:valueOf('healthStatus')||null,needs:valueOf('needs')||null,
+  war_affected:valueOf('warAffected')||null,damage_type:valueOf('damageType')||null,
+  economic_status:valueOf('economicStatus')||null,status:'pending'
+ };
+ submitBtn.disabled=true;submitBtn.textContent='جارٍ إرسال الطلب...';
+ try{
+  const {error}=await supabaseClient.from('families').insert([family]);
+  if(error)throw error;
+  form.reset();document.getElementById('malesCount').value='0';document.getElementById('femalesCount').value='0';updateFamilyTypeOther();
+  showMessage(successMsg,'تم إرسال طلبك بنجاح إلى قاعدة البيانات. سيظهر لدى الإدارة للمراجعة.');
+  window.scrollTo({top:0,behavior:'smooth'});
+ }catch(error){
+  console.error('Family submission failed:',error);
+  showMessage(errorMsg,'تعذر إرسال الطلب حالياً. تحقق من اتصال الإنترنت ثم حاول مرة أخرى. إذا تكررت المشكلة، تواصل مع الإدارة.');
+ }finally{submitBtn.disabled=false;submitBtn.textContent='إرسال طلب التسجيل'}
+});
+</script></body></html>
